@@ -1,0 +1,25 @@
+# Debug: pure improved LLM (14B), short run to measure kill-chain progress.
+name: debug_llm_pure
+description: Short pure-LLM run after prompt/schema/autofill fixes.
+seed: 501
+episodes: 5
+max_turns: 20
+output_dir: runs/debug
+environment: { backend: sim, hosts: 3, vulnerabilities_per_host: 2 }
+interaction: { topology: none, communication: none }
+agents:
+  - id_prefix: attacker
+    role: attacker
+    adaptation: episodic
+    policy: { kind: llm }
+    llm:
+      provider: ollama
+      model: qwen2.5:14b
+      temperature: 0.2
+      max_tokens: 192
+      timeout_s: 180
+    token_budget: 60000
+  - id_prefix: defender
+    role: defender
+    adaptation: episodic
+    policy: { kind: heuristic, stealth: 0.35 }

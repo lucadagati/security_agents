@@ -1,0 +1,41 @@
+# Small population with communication — volume model.
+name: overnight_llm_3v3_comm
+description: 3A+3D episodic LLM with direct communication (population + ESR).
+seed: 306
+episodes: 8
+max_turns: 14
+measure_esr: true
+output_dir: runs/overnight
+environment: { backend: sim, hosts: 4, vulnerabilities_per_host: 2 }
+interaction:
+  topology: static
+  communication: direct
+  communication_cost: 0.5
+  allow_coalitions: true
+agents:
+  - id_prefix: attacker
+    role: attacker
+    count: 3
+    adaptation: episodic
+    policy: { kind: llm }
+    llm:
+      provider: ollama
+      model: qwen2.5:14b
+      temperature: 0.4
+      max_tokens: 192
+      timeout_s: 180
+    encoded_behaviours: []
+    token_budget: 35000
+  - id_prefix: defender
+    role: defender
+    count: 3
+    adaptation: episodic
+    policy: { kind: llm }
+    llm:
+      provider: ollama
+      model: qwen2.5:14b
+      temperature: 0.4
+      max_tokens: 192
+      timeout_s: 180
+    encoded_behaviours: []
+    token_budget: 35000

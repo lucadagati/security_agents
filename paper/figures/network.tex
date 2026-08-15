@@ -1,0 +1,26 @@
+\begin{figure}[!t]
+\centering
+\begin{tikzpicture}[
+  font=\scriptsize,
+  host/.style={draw, rounded corners=1pt, minimum width=1.55cm, minimum height=0.55cm, align=center},
+  arr/.style={-{Latex}}
+]
+\node[host] (inet) {Internet};
+\node[host, below=0.35cm of inet] (gw) {Gateway};
+\node[host, below=0.45cm of gw, xshift=-1.7cm] (sa) {Service A};
+\node[host, below=0.45cm of gw] (sb) {Service B};
+\node[host, below=0.45cm of gw, xshift=1.7cm] (sc) {Service C};
+\node[host, below=0.55cm of sb, minimum width=5.1cm] (ds) {Data store};
+\draw[arr] (inet) -- (gw);
+\draw[arr] (gw) -- (sa);
+\draw[arr] (gw) -- (sb);
+\draw[arr] (gw) -- (sc);
+\draw[arr] (sa) -- (ds);
+\draw[arr] (sb) -- (ds);
+\draw[arr] (sc) -- (ds);
+\end{tikzpicture}
+\caption{Layered cyber environment (Section~\ref{sec:environment}).
+Attackers start outside the gateway under partial observability. The
+terminal offensive objective is exfiltration from the data store.}
+\label{fig:network}
+\end{figure}

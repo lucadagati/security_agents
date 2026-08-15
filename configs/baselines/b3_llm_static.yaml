@@ -1,0 +1,23 @@
+# B3 - Static LLM agent (no persistent memory / adaptation). Requires Ollama.
+name: b3_llm_static
+description: LLM attacker and defender with static (null) memory. Baseline B3.
+seed: 200
+episodes: 10
+max_turns: 16
+environment: { backend: sim, hosts: 3, vulnerabilities_per_host: 2 }
+interaction: { topology: none, communication: none }
+agents:
+  - id_prefix: attacker
+    role: attacker
+    adaptation: static
+    policy: { kind: llm }
+    llm: { provider: ollama, temperature: 0.4 }
+    encoded_behaviours: []
+    token_budget: 20000
+  - id_prefix: defender
+    role: defender
+    adaptation: static
+    policy: { kind: llm }
+    llm: { provider: ollama, temperature: 0.4 }
+    encoded_behaviours: []
+    token_budget: 20000

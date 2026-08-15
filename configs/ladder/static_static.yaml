@@ -1,0 +1,19 @@
+# Ladder rung 1 (B1+B2): static attacker vs static defender.
+name: ladder_static_static
+description: Rule-based attacker vs rule-based defender (no adaptation).
+seed: 100
+episodes: 40
+max_turns: 20
+environment: { backend: sim, hosts: 3, vulnerabilities_per_host: 2, detection_base_rate: 0.15 }
+interaction: { topology: none, communication: none }
+agents:
+  - id_prefix: attacker
+    role: attacker
+    adaptation: static
+    policy: { kind: rule_based, stealth: 0.3 }
+    encoded_behaviours: [reconnaissance, privilege_escalation, resource_targeting]
+  - id_prefix: defender
+    role: defender
+    adaptation: static
+    policy: { kind: rule_based, stealth: 0.4 }
+    encoded_behaviours: [adaptive_monitoring, dynamic_isolation]

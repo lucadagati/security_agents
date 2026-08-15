@@ -1,0 +1,69 @@
+\section{Co-Evolutionary Agent Security Framework}
+\label{sec:framework}
+
+\subsection{Architecture}
+The system has three layers, shown in Fig.~\ref{fig:architecture}:
+(i)~an agent population of attackers and defenders;
+(ii)~a cyber environment that exposes hosts, services, credentials,
+logs and vulnerabilities;
+(iii)~an evaluation layer that records trajectories and computes
+metrics. An experiment controller drives the loop of
+Fig.~\ref{fig:loop}.
+
+\input{figures/architecture}
+
+\subsection{Decision Loop}
+At each turn an agent receives a partial observation, consults memory,
+and selects a single structured tool. The environment validates
+parameters against a JSON schema, applies the action, and returns a
+result. The LLM, when used, never executes code; it only names a
+capability~\cite{schick2023toolformer,yao2023react}. Heuristic policies
+implement the same interface, which lets the co-evolutionary machinery
+be validated without a language model and later swapped for an Ollama
+backend on local GPUs.
+
+\subsection{Memory}
+Null memory realises L0. A sliding window of in-episode actions realises
+L1. L2 additionally stores a one-line reflection distilled from the
+episode outcome (success, detection, false positives). The reflection
+is the only cross-episode channel: we do not fine-tune weights between
+episodes. This is closer to how deployed LLM agents will actually
+``learn'' from operations---by writing notes---than to classical
+reinforcement learning~\cite{shinn2023reflexion}.
+
+\subsection{Co-Evolutionary Loop}
+Fig.~\ref{fig:loop} and the following procedure implement the
+controller. Each episode produces experience that can change future
+behaviour. The scientific object is the trajectory of policies
+$\pi^{(t)}\mapsto\pi^{(t+1)}$, not a single success rate.
+
+\begin{figure}[!t]
+\centering
+\fbox{\parbox{0.95\columnwidth}{\small
+\textbf{Procedure} Co-evolutionary episode loop.\\
+\textbf{Input:} populations $\mathcal{A},\mathcal{D}$; environment $\mathcal{E}$; episodes $T$.\\
+1.\ \textbf{for} $t \gets 1$ \textbf{to} $T$ \textbf{do}\\
+2.\ \quad $\mathcal{E}.\mathrm{reset}(\mathrm{seed}+t)$\\
+3.\ \quad reset in-episode memory of every agent\\
+4.\ \quad \textbf{for} $h \gets 1$ \textbf{to} $H$ \textbf{do}\\
+5.\ \quad\quad \textbf{for} each agent $i$ with remaining budget \textbf{do}\\
+6.\ \quad\quad\quad $o_i \gets \mathcal{E}.\mathrm{observe}(i)$\\
+7.\ \quad\quad\quad $a_i \gets \pi_i(o_i,\mu_i)$\\
+8.\ \quad\quad\quad $r_i \gets \mathcal{E}.\mathrm{step}(a_i)$\\
+9.\ \quad\quad\quad $\mu_i \gets \mathrm{record}(\mu_i,a_i,r_i)$\\
+10.\ \quad\quad $\mathcal{E}.\mathrm{end\text{-}turn}()$ \hfill {\scriptsize (suspicion decay, IDS)}\\
+11.\ \quad\quad \textbf{if} objective met \textbf{then break}\\
+12.\ \quad record outcome; $\pi_i,\mu_i \gets \mathrm{adapt}(\pi_i,\mu_i,\mathrm{outcome})$
+}}
+\caption{Co-evolutionary episode loop (proposal of Section~\ref{sec:framework}).}
+\label{fig:loop}
+\end{figure}
+
+\subsection{Strategy Signature}
+To measure change we need a numeric fingerprint of $\pi_i$. We use a
+mixed signature $s_i\in\mathbb{R}^k$ comprising (a)~an explicit
+strategic parameter (stealth for attackers, vigilance for defenders)
+and (b)~the empirical distribution of tool categories over a recent
+window. Distance between signatures is Euclidean on the union of keys.
+This is crude by design: it is computable online and does not require a
+learned behaviour embedding.

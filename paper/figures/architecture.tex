@@ -1,0 +1,24 @@
+\begin{figure}[!t]
+\centering
+\begin{tikzpicture}[
+  font=\footnotesize,
+  box/.style={draw, rounded corners=1pt, align=center, inner sep=4pt, text width=2.15cm},
+  layer/.style={draw, dashed, inner sep=6pt, rounded corners=2pt},
+  arr/.style={-{Latex}, thick}
+]
+\node[box] (a1) {Attackers};
+\node[box, right=0.35cm of a1] (d1) {Defenders};
+\node[box, below=0.55cm of $(a1)!0.5!(d1)$] (int) {Interaction\\$G_t=(V_t,E_t)$};
+\node[box, below=0.45cm of int, text width=4.8cm] (env) {Cyber environment\\hosts $\cdot$ services $\cdot$ credentials $\cdot$ vulns};
+\node[box, below=0.45cm of env, text width=4.8cm] (eval) {Evaluation\\ASR, DR, CEP, ESR, emergence};
+\draw[arr] (a1) -- (int);
+\draw[arr] (d1) -- (int);
+\draw[arr] (int) -- (env);
+\draw[arr] (env) -- (eval);
+\node[layer, fit=(a1)(d1)(int), label=above:{\scriptsize Agent population}] {};
+\end{tikzpicture}
+\caption{Three-layer architecture. Populations interact through a shared
+cyber environment; the evaluation layer never feeds ground truth back
+into agent observations.}
+\label{fig:architecture}
+\end{figure}

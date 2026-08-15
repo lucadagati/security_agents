@@ -1,0 +1,26 @@
+name: debug_llm_hybrid
+description: Hybrid attacker (LLM+legal-hint gate) vs heuristic defender.
+seed: 602
+episodes: 8
+max_turns: 20
+output_dir: runs/debug
+environment: { backend: sim, hosts: 3, vulnerabilities_per_host: 2 }
+interaction: { topology: none, communication: none }
+agents:
+  - id_prefix: attacker
+    role: attacker
+    adaptation: persistent
+    policy: { kind: hybrid, stealth: 0.3, params: { stall_limit: 1, force_legal_hints: true } }
+    llm:
+      provider: ollama
+      model: qwen2.5:14b
+      temperature: 0.2
+      max_tokens: 192
+      timeout_s: 180
+    token_budget: 60000
+    encoded_behaviours: []
+  - id_prefix: defender
+    role: defender
+    adaptation: persistent
+    policy: { kind: heuristic, stealth: 0.4 }
+    encoded_behaviours: [adaptive_monitoring, dynamic_isolation]

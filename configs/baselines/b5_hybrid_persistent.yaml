@@ -1,0 +1,32 @@
+# B5 hybrid persistent.
+name: b5_hybrid_persistent
+description: Persistent hybrid LLM agents (B5 fixed path).
+seed: 521
+episodes: 15
+max_turns: 18
+output_dir: runs/debug
+environment: { backend: sim, hosts: 3, vulnerabilities_per_host: 2 }
+interaction: { topology: none, communication: none }
+agents:
+  - id_prefix: attacker
+    role: attacker
+    adaptation: persistent
+    policy: { kind: hybrid, stealth: 0.3, params: { stall_limit: 1, force_legal_hints: true } }
+    llm:
+      provider: ollama
+      model: qwen2.5:14b
+      temperature: 0.3
+      max_tokens: 192
+      timeout_s: 180
+    token_budget: 60000
+  - id_prefix: defender
+    role: defender
+    adaptation: persistent
+    policy: { kind: hybrid, stealth: 0.4, params: { stall_limit: 1, force_legal_hints: true } }
+    llm:
+      provider: ollama
+      model: qwen2.5:14b
+      temperature: 0.3
+      max_tokens: 192
+      timeout_s: 180
+    token_budget: 60000

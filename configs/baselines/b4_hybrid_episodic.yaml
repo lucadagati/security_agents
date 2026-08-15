@@ -1,0 +1,32 @@
+# B4 hybrid: episodic LLM+heur on both sides (credible adaptive baseline).
+name: b4_hybrid_episodic
+description: Episodic hybrid LLM agents (B4 fixed path).
+seed: 520
+episodes: 12
+max_turns: 18
+output_dir: runs/debug
+environment: { backend: sim, hosts: 3, vulnerabilities_per_host: 2 }
+interaction: { topology: none, communication: none }
+agents:
+  - id_prefix: attacker
+    role: attacker
+    adaptation: episodic
+    policy: { kind: hybrid, stealth: 0.3, params: { stall_limit: 1, force_legal_hints: true } }
+    llm:
+      provider: ollama
+      model: qwen2.5:14b
+      temperature: 0.3
+      max_tokens: 192
+      timeout_s: 180
+    token_budget: 50000
+  - id_prefix: defender
+    role: defender
+    adaptation: episodic
+    policy: { kind: hybrid, stealth: 0.4, params: { stall_limit: 1, force_legal_hints: true } }
+    llm:
+      provider: ollama
+      model: qwen2.5:14b
+      temperature: 0.3
+      max_tokens: 192
+      timeout_s: 180
+    token_budget: 50000

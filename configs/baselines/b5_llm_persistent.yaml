@@ -1,0 +1,23 @@
+# B5 - Persistent LLM agent (cross-episode memory). Requires Ollama.
+name: b5_llm_persistent
+description: LLM attacker and defender with persistent cross-episode learning. Baseline B5.
+seed: 200
+episodes: 15
+max_turns: 16
+environment: { backend: sim, hosts: 3, vulnerabilities_per_host: 2 }
+interaction: { topology: none, communication: none }
+agents:
+  - id_prefix: attacker
+    role: attacker
+    adaptation: persistent
+    policy: { kind: llm }
+    llm: { provider: ollama, temperature: 0.5 }
+    encoded_behaviours: []
+    token_budget: 25000
+  - id_prefix: defender
+    role: defender
+    adaptation: persistent
+    policy: { kind: llm }
+    llm: { provider: ollama, temperature: 0.5 }
+    encoded_behaviours: []
+    token_budget: 25000

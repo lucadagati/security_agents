@@ -1,0 +1,2 @@
+# Dataset output directory. Trajectory JSONL files are written under runs/
+# and may be copied here for archival. This file keeps the directory in git.

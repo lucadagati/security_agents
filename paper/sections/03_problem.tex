@@ -1,0 +1,81 @@
+\section{Problem Definition}
+\label{sec:problem}
+
+\subsection{Setting}
+Let $\mathcal{A}_t$ and $\mathcal{D}_t$ be finite populations of attacker
+and defender agents at discrete episode $t=1,\ldots,T$. Agents interact
+through a cyber environment $\mathcal{E}$ for at most $H$ turns per
+episode. The environment is partially observable: an agent does not know
+the complete state, the capabilities or goals of others, or their
+internal policies. This is essential. Full observability would collapse
+the security problem into a complete-information game.
+
+\subsection{Agent}
+An agent is a tuple
+\begin{equation}
+  A_i \;=\; \bigl(M_i,\, G_i,\, \mathcal{T}_i,\, \mathcal{C}_i,\,
+  K_i,\, \pi_i,\, \mu_i\bigr),
+  \label{eq:agent}
+\end{equation}
+where $M_i$ is the underlying model (heuristic or LLM), $G_i$ a
+high-level objective, $\mathcal{T}_i$ the structured tools the
+environment exposes, $\mathcal{C}_i$ the implied capabilities,
+$K_i$ the knowledge revealed so far, $\pi_i$ the policy, and $\mu_i$
+memory. The environment defines $\mathcal{T}_i$; the experimenter
+defines $G_i$; $\pi_i$ is \emph{not} a hard-coded attack or defence
+script~\cite{yao2023react}.
+
+We insist on a three-way distinction:
+\begin{itemize}
+\item \emph{Capability}---what the agent \emph{can} do ($\mathcal{T}_i$).
+\item \emph{Objective}---what the agent \emph{wants} ($G_i$).
+\item \emph{Strategy}---how it chooses to get there ($\pi_i$).
+\end{itemize}
+Unexpected strategies can then be studied without adding tools. That
+separation is what makes an emergence claim falsifiable.
+
+\subsection{Adaptation Levels}
+Following the hypothesis that persistent memory changes security
+qualitatively, we distinguish three levels.
+\begin{itemize}
+\item \textbf{L0 -- Static.} $\pi_i$ and $\mu_i$ do not change.
+\item \textbf{L1 -- Episodic.} $\pi_i$ may adapt within an episode;
+memory is wiped at the episode boundary.
+\item \textbf{L2 -- Persistent.} A compact reflection of the episode
+outcome is written into $\mu_i$ and conditions all future episodes.
+\end{itemize}
+The central hypothesis is that security risks increase qualitatively
+when agents move from L1 to L2.
+
+\subsection{Interaction}
+The population is a time-varying directed graph
+$G_t=(V_t,E_t)$, where $V_t$ is the set of agents and $E_t$ records
+communication, delegation or trust~\cite{park2023generative}. Edges may
+be absent, static, role-local, or rewritten from observed traffic
+(dynamic topology). Communication has a cost, so cooperation is not
+free. Agents are never instructed to form coalitions; coalitions are
+detected \emph{post hoc} from reciprocal same-role
+traffic~\cite{abdelnabi2024cooperation}.
+
+\subsection{Research Questions}
+\begin{description}
+\item[RQ0] How does the security behaviour of autonomous agents evolve
+when attackers and defenders repeatedly interact and adapt?
+\item[RQ1] How does autonomous adaptation affect attack and defence
+effectiveness? (static/adaptive factorial)
+\item[RQ2] Which security behaviours emerge without being programmed?
+\item[RQ3] Does repeated interaction produce measurable co-evolution of
+strategies?
+\item[RQ4] How do population size, topology and communication change
+the picture?
+\item[RQ5] Do populations converge, oscillate, or enter an arms race?
+\end{description}
+
+\subsection{Emergence}
+We do not treat every surprise as intelligence. A behaviour $b$ is
+\emph{emergent} when it is not encoded in the agent's objective, policy
+class or attack script, yet arises consistently from interaction with
+the environment and other agents. Encoding is declared in the experiment
+configuration as a set $B_i^{\mathrm{enc}}$. Observation of $b\notin
+B_i^{\mathrm{enc}}$ at a stable rate is a candidate for emergence, not
+a proof of it.

@@ -1,0 +1,32 @@
+# Tiny smoke test: 1 episode, short horizon, volume model.
+name: smoke_llm_1ep
+description: End-to-end Ollama smoke before overnight suite.
+seed: 1
+episodes: 1
+max_turns: 4
+output_dir: runs/overnight
+environment: { backend: sim, hosts: 2, vulnerabilities_per_host: 1 }
+interaction: { topology: none, communication: none }
+agents:
+  - id_prefix: attacker
+    role: attacker
+    adaptation: episodic
+    policy: { kind: llm }
+    llm:
+      provider: ollama
+      model: qwen2.5-coder:7b
+      temperature: 0.2
+      max_tokens: 128
+      timeout_s: 120
+    token_budget: 5000
+  - id_prefix: defender
+    role: defender
+    adaptation: episodic
+    policy: { kind: llm }
+    llm:
+      provider: ollama
+      model: qwen2.5-coder:7b
+      temperature: 0.2
+      max_tokens: 128
+      timeout_s: 120
+    token_budget: 5000

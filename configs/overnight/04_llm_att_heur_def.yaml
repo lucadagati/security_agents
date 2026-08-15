@@ -1,0 +1,27 @@
+# LLM attacker vs heuristic defender (adaptation asymmetry).
+name: overnight_llm_att_heur_def
+description: Persistent LLM attacker vs persistent heuristic defender.
+seed: 304
+episodes: 16
+max_turns: 16
+output_dir: runs/overnight
+environment: { backend: sim, hosts: 3, vulnerabilities_per_host: 2 }
+interaction: { topology: none, communication: none }
+agents:
+  - id_prefix: attacker
+    role: attacker
+    adaptation: persistent
+    policy: { kind: llm }
+    llm:
+      provider: ollama
+      model: qwen2.5:14b
+      temperature: 0.4
+      max_tokens: 256
+      timeout_s: 180
+    encoded_behaviours: []
+    token_budget: 50000
+  - id_prefix: defender
+    role: defender
+    adaptation: persistent
+    policy: { kind: heuristic, stealth: 0.45 }
+    encoded_behaviours: [adaptive_monitoring, dynamic_isolation]

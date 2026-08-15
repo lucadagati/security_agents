@@ -1,0 +1,55 @@
+\section{Experimental Environment}
+\label{sec:environment}
+
+\subsection{Network}
+The environment realises the layered network of
+Fig.~\ref{fig:network}: an external attacker faces a gateway, a row of
+service hosts, and a data store (the crown jewel). Each host carries
+vulnerabilities of sampled difficulty and, on the service layer,
+credentials that unlock the data store. Defenders may isolate hosts,
+rotate credentials, raise monitoring, investigate, block the gateway,
+or deploy decoys.
+
+\input{figures/network}
+
+\subsection{Partial Observability and Detection}
+Attackers start with an empty host set; reconnaissance and probing
+reveal structure. Defenders see suspicion only on hosts they monitor.
+Noisy actions accumulate suspicion; an automatic detector fires with
+probability $1-e^{-\lambda \sigma}$ where $\sigma$ is suspicion, after
+which suspicion and monitoring decay. Stealth---inserting waits after
+high-noise actions---is therefore a meaningful strategy rather than a
+label.
+
+\subsection{Capabilities}
+Attacker tools: $\mathtt{recon}$, $\mathtt{probe\_service}$,
+$\mathtt{exploit}$, $\mathtt{harvest\_credentials}$,
+$\mathtt{lateral\_move}$, $\mathtt{exfiltrate}$, $\mathtt{wait}$,
+$\mathtt{communicate}$.
+Defender tools: $\mathtt{monitor}$, $\mathtt{investigate}$,
+$\mathtt{isolate}$, $\mathtt{rotate\_credentials}$,
+$\mathtt{deploy\_decoy}$, $\mathtt{block}$, $\mathtt{wait}$,
+$\mathtt{communicate}$.
+The kill-chain order is a property of the \emph{environment}, not a
+prescribed attacker script. A static heuristic happens to follow that
+order; an adaptive or LLM agent may wait, diversify, retreat, or talk.
+
+\subsection{Two Backends, One Interface}
+Both backends implement $\mathrm{reset}$, $\mathrm{observe}$,
+$\mathrm{step}$, $\mathrm{state\_snapshot}$ and
+$\mathrm{is\_compromised}$. The simulator is an in-memory state machine
+used for high-volume evolution. The Kubernetes backend delegates game
+logic to the simulator so metrics remain comparable, and optionally
+mirrors isolation onto a \texttt{kind} cluster via Helm-deployed decoy
+services and NetworkPolicies. Vulnerabilities live in the state
+machine, not in exploitable production software: the range is a
+sandbox~\cite{standen2021cyborg,microsoft2021cyberbattlesim}.
+
+\subsection{Telemetry}
+Every step emits a trajectory record with episode, agent, observation,
+action, target, rationale, result, strategy label and memory
+update~\cite{park2023generative}.
+Runs are keyed by config hash, seed and git SHA. JSONL is the
+source of truth; PostgreSQL is an optional query backend. The dataset
+of trajectories is a first-class artefact for later work on attack
+prediction and strategy classification.

@@ -1,0 +1,34 @@
+# Persistent 1v1 with llama3.1:8b (capability / model-family comparison).
+name: overnight_llama31_persistent
+description: 1A+1D persistent LLM using llama3.1:8b.
+seed: 410
+episodes: 12
+max_turns: 14
+output_dir: runs/overnight
+environment: { backend: sim, hosts: 3, vulnerabilities_per_host: 2 }
+interaction: { topology: none, communication: none }
+agents:
+  - id_prefix: attacker
+    role: attacker
+    adaptation: persistent
+    policy: { kind: llm }
+    llm:
+      provider: ollama
+      model: llama3.1:8b
+      temperature: 0.4
+      max_tokens: 256
+      timeout_s: 180
+    encoded_behaviours: []
+    token_budget: 45000
+  - id_prefix: defender
+    role: defender
+    adaptation: persistent
+    policy: { kind: llm }
+    llm:
+      provider: ollama
+      model: llama3.1:8b
+      temperature: 0.4
+      max_tokens: 256
+      timeout_s: 180
+    encoded_behaviours: []
+    token_budget: 45000

@@ -1,0 +1,34 @@
+# Overnight LLM B5: persistent cross-episode memory.
+name: overnight_llm_persistent
+description: 1A+1D persistent LLM (B5). Volume model on L40.
+seed: 303
+episodes: 20
+max_turns: 16
+output_dir: runs/overnight
+environment: { backend: sim, hosts: 3, vulnerabilities_per_host: 2 }
+interaction: { topology: none, communication: none }
+agents:
+  - id_prefix: attacker
+    role: attacker
+    adaptation: persistent
+    policy: { kind: llm }
+    llm:
+      provider: ollama
+      model: qwen2.5:14b
+      temperature: 0.4
+      max_tokens: 256
+      timeout_s: 180
+    encoded_behaviours: []
+    token_budget: 60000
+  - id_prefix: defender
+    role: defender
+    adaptation: persistent
+    policy: { kind: llm }
+    llm:
+      provider: ollama
+      model: qwen2.5:14b
+      temperature: 0.4
+      max_tokens: 256
+      timeout_s: 180
+    encoded_behaviours: []
+    token_budget: 60000

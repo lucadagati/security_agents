@@ -1,0 +1,34 @@
+# Strong vs volume cross-capability (H7): 30B attacker vs 7B defender.
+name: overnight_strong_vs_volume
+description: Persistent 30B attacker vs 7B defender (capability asymmetry).
+seed: 402
+episodes: 10
+max_turns: 14
+output_dir: runs/overnight
+environment: { backend: sim, hosts: 3, vulnerabilities_per_host: 2 }
+interaction: { topology: none, communication: none }
+agents:
+  - id_prefix: attacker
+    role: attacker
+    adaptation: persistent
+    policy: { kind: llm }
+    llm:
+      provider: ollama
+      model: qwen3-coder:30b
+      temperature: 0.35
+      max_tokens: 256
+      timeout_s: 300
+    encoded_behaviours: []
+    token_budget: 50000
+  - id_prefix: defender
+    role: defender
+    adaptation: persistent
+    policy: { kind: llm }
+    llm:
+      provider: ollama
+      model: qwen2.5:14b
+      temperature: 0.35
+      max_tokens: 256
+      timeout_s: 180
+    encoded_behaviours: []
+    token_budget: 50000

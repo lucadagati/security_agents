@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.env
+
+# Experiment outputs
+runs/
+datasets/*.jsonl
+datasets/**/*.jsonl
+!datasets/.gitkeep
+*.log
+
+# Analysis artifacts
+analysis_out/
+*.png
+!docs/**/*.png
+
+# LaTeX (paper/ has its own .gitignore; keep root clean of aux)
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.log
+paper/*.out
+paper/*.fls
+paper/*.fdb_latexmk
+paper/*.synctex.gz
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

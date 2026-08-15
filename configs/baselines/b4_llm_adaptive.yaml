@@ -1,0 +1,23 @@
+# B4 - Adaptive LLM agent (episodic memory). Requires Ollama.
+name: b4_llm_adaptive
+description: LLM attacker and defender with episodic adaptation. Baseline B4.
+seed: 200
+episodes: 10
+max_turns: 16
+environment: { backend: sim, hosts: 3, vulnerabilities_per_host: 2 }
+interaction: { topology: none, communication: none }
+agents:
+  - id_prefix: attacker
+    role: attacker
+    adaptation: episodic
+    policy: { kind: llm }
+    llm: { provider: ollama, temperature: 0.5 }
+    encoded_behaviours: []
+    token_budget: 20000
+  - id_prefix: defender
+    role: defender
+    adaptation: episodic
+    policy: { kind: llm }
+    llm: { provider: ollama, temperature: 0.5 }
+    encoded_behaviours: []
+    token_budget: 20000

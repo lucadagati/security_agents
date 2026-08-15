@@ -1,0 +1,21 @@
+# Offline stand-in for B3: exercises the LLM code path with MockBackend.
+name: b3_llm_mock
+description: Mock-LLM static agents. Validates the LLM policy path without a GPU.
+seed: 200
+episodes: 8
+max_turns: 12
+environment: { backend: sim, hosts: 3, vulnerabilities_per_host: 2 }
+interaction: { topology: none, communication: none }
+agents:
+  - id_prefix: attacker
+    role: attacker
+    adaptation: static
+    policy: { kind: llm }
+    llm: { provider: mock }
+    encoded_behaviours: []
+  - id_prefix: defender
+    role: defender
+    adaptation: static
+    policy: { kind: llm }
+    llm: { provider: mock }
+    encoded_behaviours: []

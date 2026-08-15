@@ -1,0 +1,88 @@
+%% Co-Evolutionary Security of Autonomous AI Agents
+%% IEEE Transactions journal manuscript (IEEEtran, journal mode).
+%%
+%% For IEEE Computer Society journals (e.g. TDSC) use:
+%%   \documentclass[10pt,journal,compsoc]{IEEEtran}
+\documentclass[journal]{IEEEtran}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{cite}
+\usepackage{url}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,calc,shapes.geometric}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+
+\hyphenation{co-evo-lu-tion-ary multi-agent cy-ber-se-cu-ri-ty}
+
+\begin{document}
+
+\title{Co-Evolutionary Security of Autonomous AI Agents:\\
+Emergent Attack and Defense Strategies in Multi-Agent Cyber Environments}
+
+\author{Anonymous~Authors%
+\thanks{Manuscript received 14 August 2026; revised XX Month 2026.
+Replace this thanks block with author affiliations and the corresponding
+author e-mail before submission.}%
+}
+
+\markboth{IEEE Transactions on Dependable and Secure Computing}%
+{Anonymous \MakeLowercase{\textit{et al.}}: Co-Evolutionary Security of Autonomous AI Agents}
+
+\maketitle
+
+\begin{abstract}
+Security evaluations of autonomous AI agents are typically performed in
+isolation: a single agent is probed with a fixed attack, or a defender is
+scored against a static adversary. We argue that this view is incomplete.
+When attackers and defenders are themselves learning agents that interact
+repeatedly, each side observes the other, adapts, and may invent strategies
+that no evaluation script encoded. Security then becomes a co-evolutionary
+process. This paper introduces a framework for studying that process in a
+controlled cyber environment. Agents are defined by capabilities, goals,
+memory and a policy, under partial observability; strategy is
+\emph{not} hard-coded. We distinguish three adaptation levels---static,
+episodic, and persistent cross-episode learning---and define two metrics
+aimed at co-evolution: co-evolutionary pressure (CEP) and emergent security
+risk (ESR). A seedable simulator and an optional Kubernetes cyber range
+share the same interface, so populations from one to twenty agents can be
+studied reproducibly. On a one-versus-one adaptation ladder, moving from
+static to adaptive attackers reduced the detection rate from $0.975$ to
+$0.55$ and raised attack success, while persistent co-evolution was
+classified as an arms race and produced behaviours (strategic patience,
+delayed attack, deception) that were absent from agent objectives. The
+result supports the central claim: risks that cannot be observed in
+isolated-agent evaluations emerge once attackers and defenders adapt to
+one another.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Autonomous agents, cybersecurity, co-evolution, multi-agent systems,
+large language models, emergent behavior, cyber ranges, deception.
+\end{IEEEkeywords}
+
+\input{sections/01_introduction}
+\input{sections/02_related_work}
+\input{sections/03_problem}
+\input{sections/04_framework}
+\input{sections/05_environment}
+\input{sections/06_methodology}
+\input{sections/07_results}
+\input{sections/08_discussion}
+\input{sections/09_conclusion}
+
+\appendices
+\input{sections/appendix_reproducibility}
+
+\bibliographystyle{IEEEtran}
+\bibliography{IEEEabrv,bib/references}
+
+\end{document}

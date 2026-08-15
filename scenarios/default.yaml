@@ -1,0 +1,27 @@
+# Default cyber scenario (proposal section 10).
+#
+# Layered network the simulator (and the K8s range) instantiate:
+#
+#   Internet -> Gateway -> Service hosts -> Data store
+#
+# Attackers start outside the gateway under partial observability. The
+# terminal offensive objective is to exfiltrate from the data store.
+# Defenders protect that asset while paying operational cost for
+# monitoring, isolation and false positives.
+name: default_range
+layers:
+  - name: gateway
+    hosts: [gw]
+  - name: service
+    hosts: [svc_00, svc_01, svc_02]
+  - name: datastore
+    hosts: [datastore]
+objective:
+  attacker: Compromise the target data store while minimising the probability of detection.
+  defender: Protect critical assets while minimising operational cost and false positives.
+capabilities:
+  attacker: [recon, probe_service, exploit, harvest_credentials, lateral_move, exfiltrate, wait, communicate]
+  defender: [monitor, investigate, isolate, rotate_credentials, deploy_decoy, block, wait, communicate]
+notes: |
+  Strategy is not encoded. The environment exposes capabilities and constraints;
+  agents discover how to use them (proposal sections 8, 24).

@@ -1,0 +1,87 @@
+\section{Results}
+\label{sec:results}
+
+We report the one-versus-one adaptation ladder: static versus static,
+static versus adaptive, adaptive versus static, adaptive versus
+adaptive, and persistent versus persistent. All five cells share the
+same seed, horizon and environment, so differences are attributable to
+adaptation level. Language-model policies are not used in this section;
+heuristic policies with a stealth (attacker) or vigilance (defender)
+parameter occupy B1/B2, which is the correct first test of whether the
+\emph{phenomenon} exists~\cite{rosin1997new}.
+
+\subsection{Adaptation Changes Effectiveness (RQ1, H1)}
+Table~\ref{tab:ladder} and Fig.~\ref{fig:ladder} summarise the ladder.
+
+\begin{table}[!t]
+\caption{One-versus-one adaptation ladder (40 episodes, seed 100).}
+\label{tab:ladder}
+\centering
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Matchup} & \textbf{ASR} & \textbf{DR} & \textbf{CEP} & \textbf{AG} \\
+\midrule
+Static / static         & $0.050$ & $0.975$ & $0.36$ & $0.000$ \\
+Static / adaptive       & $0.050$ & $0.975$ & $0.42$ & $0.000$ \\
+Adaptive / static       & $0.075$ & $0.550$ & $0.41$ & $0.025$ \\
+Adaptive / adaptive     & $0.100$ & $0.550$ & $0.50$ & $0.050$ \\
+Persistent / persistent & $0.075$ & $0.575$ & $0.47$ & $0.025$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A static attacker is almost always detected ($\mathrm{DR}=0.975$) and
+rarely exfiltrates ($\mathrm{ASR}=0.05$), whether the defender adapts or
+not. Giving the attacker episodic adaptation more than halves detection
+($\mathrm{DR}=0.55$) and raises success. The mechanism is stealth
+pacing: after a noisy exploit the attacker inserts waits so that
+suspicion decays, a behaviour that the static policy never selects
+because its stealth parameter never moves. H1 is supported for
+detection and, more weakly, for success. An adaptive defender facing a
+static attacker does not further reduce ASR: the static attacker is
+already loud enough that the baseline detector suffices.
+
+\input{figures/ladder_bars}
+
+\subsection{Co-Evolution and Stability (RQ3, RQ5, H2)}
+CEP is lowest for static/static ($0.36$)---residual variation comes
+from environment stochasticity, not from policy updates---and highest
+for adaptive/adaptive ($0.50$). Persistent/persistent is classified by
+the analysis engine as an \emph{arms race}: late-episode signature
+change ($0.52$) exceeds early-episode change ($0.43$), so strategies
+do not settle (Fig.~\ref{fig:arms}).
+
+On the persistent run, ASR falls from $0.10$ in the first twenty
+episodes to $0.05$ in the last twenty, while mean attacker stealth and
+defender vigilance both trend upward. That is the H2 signature:
+defenders suppress an initially successful pattern, attackers respond,
+neither side freezes. Recovery, when it occurs, is not a return to the
+opening strategy; CEP remaining high means the pair is moving through
+strategy space.
+
+\input{figures/arms_race}
+
+\subsection{Emergence (RQ2, H5)}
+Encoded behaviours for the ladder were reconnaissance, privilege
+escalation and resource targeting (attacker), plus adaptive monitoring
+and dynamic isolation (defender). Post-hoc tagging against the taxonomy
+of Section~\ref{sec:problem} found additional behaviours that were
+\emph{not} encoded: delayed attack and strategic patience ($240$
+occurrences each on the persistent run), strategic resource allocation
+($24$), deception and decoy deployment ($7$ each). Delayed attack is
+exactly the stealth-pacing wait; it is a strategy discovered from the
+detection physics, not an instruction in the objective
+(``exfiltrate while minimising detection'' does not mention waiting).
+Under the definition of Section~\ref{sec:problem} these are candidate
+emergent behaviours. We do not claim they are intelligent; we claim
+they were not programmed as scripts and yet arose consistently.
+
+\subsection{What the Ladder Does Not Yet Show}
+Communication was disabled, so coalition rate is zero by construction
+(H3, H6). ESR is undefined without a paired isolation run on a
+population that can talk. LLM capability (H7) is reserved for B3--B5
+once the Ollama endpoint is attached. These are not missing controls on
+the present claim; they are the next cells of Table~\ref{tab:matrix}.
+The claim this section is entitled to is narrower and, we think,
+stronger: \emph{the co-evolutionary phenomenon exists already at
+one-versus-one, before any society of agents is introduced.}

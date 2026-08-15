@@ -1,0 +1,24 @@
+\section{Reproducibility Details}
+\label{app:repro}
+
+The framework is implemented as the Python package \texttt{coevsec}.
+Experiments are YAML files. A run is invoked as
+\texttt{python run\_experiment.py} with a \texttt{--config} path
+(e.g.\ \texttt{configs/e1.yaml}), or, for the ladder of
+Section~\ref{sec:results}, as \texttt{coevsec ladder} over
+\texttt{configs/ladder}.
+Configs pin seed, episode count, turn budget, host count, vulnerability
+count, adaptation level, policy class and communication topology. Each
+run directory stores \texttt{config.json}, \texttt{meta.json} (seed,
+config hash, git SHA), \texttt{trajectories.jsonl},
+\texttt{episodes.jsonl} and \texttt{summary.json}. The analysis engine
+emits a metric table, a strategy-dynamics classification (stable
+equilibrium, converging, arms race), an emergence report against the
+declared encoded behaviours, and an optional coalition graph.
+
+LLM experiments read the environment variables
+\texttt{COEVSEC\_OLLAMA\_BASE\_URL} and \texttt{COEVSEC\_OLLAMA\_MODEL};
+they are not required for the ladder.
+The Kubernetes backend is selected with
+\texttt{environment.backend: k8s}. Provisioning a live \texttt{kind}
+cluster is opt-in (\texttt{provision: true}).
