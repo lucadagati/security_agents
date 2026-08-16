@@ -1,87 +1,119 @@
 \section{Results}
 \label{sec:results}
 
-We report the one-versus-one adaptation ladder: static versus static,
-static versus adaptive, adaptive versus static, adaptive versus
-adaptive, and persistent versus persistent. All five cells share the
-same seed, horizon and environment, so differences are attributable to
-adaptation level. Language-model policies are not used in this section;
-heuristic policies with a stealth (attacker) or vigilance (defender)
-parameter occupy B1/B2, which is the correct first test of whether the
-\emph{phenomenon} exists~\cite{rosin1997new}.
+We report a multi-seed heuristic adaptation ladder and a complementary
+language-model evaluation on the same environment. Only adaptation level
+and policy class vary within each study.
 
-\subsection{Adaptation Changes Effectiveness (RQ1, H1)}
-Table~\ref{tab:ladder} and Fig.~\ref{fig:ladder} summarise the ladder.
+\subsection{Heuristic adaptation ladder}
+\label{sec:results-ladder}
+Table~\ref{tab:ladder} and Fig.~\ref{fig:ladder} summarise the
+one-versus-one factorial (six seeds, $40$ episodes each). Static attackers
+are detected in $98.3{\pm}1.0\%$ of episodes and rarely exfiltrate,
+whether the defender adapts or not. Episodic adaptation on the attacker
+side roughly halves detection ($\mathrm{DR}=0.558{\pm}0.047$) and raises
+success (H1). The dominant mechanism is stealth pacing: after a noisy
+exploit the attacker inserts low-noise pauses so suspicion decays, a
+behaviour the static policy never selects.
+
+\input{figures/ladder_bars}
+
+CEP is lowest for static/static matchups and highest when both sides adapt
+(Fig.~\ref{fig:cep-ladder}). Persistent runs are typically classified as
+\emph{arms races}: late-episode signature change exceeds early-episode
+change (Fig.~\ref{fig:arms}). On representative persistent runs, rolling
+detection falls while attacker stealth and defender vigilance trend upward
+(Fig.~\ref{fig:episode-dynamics}), the H2 pattern of suppression followed
+by strategic shift rather than convergence.
+
+Post-hoc tagging found behaviours not listed in the configured objectives,
+including delayed attack, strategic patience, deception and decoy
+deployment (H5). We do not claim general intelligence; we claim these
+patterns were not scripted yet arose consistently across seeds.
+
+\input{figures/episode_dynamics}
+\input{figures/arms_race}
+\input{figures/cep_ladder}
 
 \begin{table}[!t]
-\caption{One-versus-one adaptation ladder (40 episodes, seed 100).}
+\caption{Heuristic adaptation ladder (mean$\pm$95\% CI, six seeds, 40 episodes).}
 \label{tab:ladder}
 \centering
-\begin{tabular}{@{}lcccc@{}}
+\begin{tabular}{@{}lccc@{}}
 \toprule
-\textbf{Matchup} & \textbf{ASR} & \textbf{DR} & \textbf{CEP} & \textbf{AG} \\
+\textbf{Matchup} & \textbf{ASR} & \textbf{DR} & \textbf{CEP} \\
 \midrule
-Static / static         & $0.050$ & $0.975$ & $0.36$ & $0.000$ \\
-Static / adaptive       & $0.050$ & $0.975$ & $0.42$ & $0.000$ \\
-Adaptive / static       & $0.075$ & $0.550$ & $0.41$ & $0.025$ \\
-Adaptive / adaptive     & $0.100$ & $0.550$ & $0.50$ & $0.050$ \\
-Persistent / persistent & $0.075$ & $0.575$ & $0.47$ & $0.025$ \\
+Static / static         & $0.046{\pm}0.015$ & $0.983{\pm}0.010$ & $0.416{\pm}0.030$ \\
+Static / adaptive       & $0.029{\pm}0.015$ & $0.983{\pm}0.010$ & $0.445{\pm}0.014$ \\
+Adaptive / static       & $0.067{\pm}0.010$ & $0.558{\pm}0.047$ & $0.391{\pm}0.030$ \\
+Adaptive / adaptive     & $0.071{\pm}0.023$ & $0.558{\pm}0.047$ & $0.454{\pm}0.021$ \\
+Persistent / persistent & $0.071{\pm}0.034$ & $0.562{\pm}0.047$ & $0.465{\pm}0.043$ \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-A static attacker is almost always detected ($\mathrm{DR}=0.975$) and
-rarely exfiltrates ($\mathrm{ASR}=0.05$), whether the defender adapts or
-not. Giving the attacker episodic adaptation more than halves detection
-($\mathrm{DR}=0.55$) and raises success. The mechanism is stealth
-pacing: after a noisy exploit the attacker inserts waits so that
-suspicion decays, a behaviour that the static policy never selects
-because its stealth parameter never moves. H1 is supported for
-detection and, more weakly, for success. An adaptive defender facing a
-static attacker does not further reduce ASR: the static attacker is
-already loud enough that the baseline detector suffices.
+\subsection{Language-model evaluation}
+\label{sec:results-llm}
+Pure LLM policies frequently stall in reconnaissance or misuse capabilities
+(for example, attempting credential harvest on hosts that hold none). We
+therefore report hybrid policies alongside a pure-LLM ablation
+(Table~\ref{tab:llm}). Episodic hybrid memory (B4) is the only primary
+cell with a clearly positive mean ASR ($0.139{\pm}0.052$;
+Fig.~\ref{fig:hybrid-asr}); static hybrid (B3) never exfiltrates and
+persistent hybrid (B5) remains near the floor. H4 is \emph{not} supported:
+episodic memory outperforms persistent memory in this setting.
 
-\input{figures/ladder_bars}
+Supplementary conditions (Table~\ref{tab:llm_ablation},
+Fig.~\ref{fig:llm-ablation}) show non-monotonic model scale, asymmetric
+matchups (heuristic attack against hybrid defence reaches the highest
+mean ASR), and low success on long-horizon and $3{\times}3$ cells.
+Fig.~\ref{fig:action-mix} shows how step-level action frequencies compose
+the hybrid attacker's behaviour on a representative B4 run. H7 is
+supported: nominal capability does not predict co-evolutionary outcomes
+without the appropriate memory regime and control structure.
 
-\subsection{Co-Evolution and Stability (RQ3, RQ5, H2)}
-CEP is lowest for static/static ($0.36$)---residual variation comes
-from environment stochasticity, not from policy updates---and highest
-for adaptive/adaptive ($0.50$). Persistent/persistent is classified by
-the analysis engine as an \emph{arms race}: late-episode signature
-change ($0.52$) exceeds early-episode change ($0.43$), so strategies
-do not settle (Fig.~\ref{fig:arms}).
+\input{figures/hybrid_memory_bars}
+\input{figures/llm_ablation_asr}
+\input{figures/action_mix}
 
-On the persistent run, ASR falls from $0.10$ in the first twenty
-episodes to $0.05$ in the last twenty, while mean attacker stealth and
-defender vigilance both trend upward. That is the H2 signature:
-defenders suppress an initially successful pattern, attackers respond,
-neither side freezes. Recovery, when it occurs, is not a return to the
-opening strategy; CEP remaining high means the pair is moving through
-strategy space.
+\begin{table}[!t]
+\caption{Hybrid LLM baselines B3--B5 (mean$\pm$95\% CI, six seeds, 30 episodes).}
+\label{tab:llm}
+\centering
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Cell} & \textbf{ASR} & \textbf{DR} & \textbf{CEP} \\
+\midrule
+B3 hybrid static      & $0.000{\pm}0.000$ & $0.939{\pm}0.020$ & $0.121{\pm}0.012$ \\
+B4 hybrid episodic    & $0.139{\pm}0.052$ & $0.467{\pm}0.070$ & $0.247{\pm}0.021$ \\
+B5 hybrid persistent  & $0.022{\pm}0.014$ & $0.467{\pm}0.070$ & $0.128{\pm}0.010$ \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-\input{figures/arms_race}
+\begin{table}[!t]
+\caption{Supplementary LLM conditions (mean ASR/DR over available seeds).}
+\label{tab:llm_ablation}
+\centering
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lccr@{}}
+\toprule
+\textbf{Condition} & \textbf{ASR} & \textbf{DR} & \textbf{$n$} \\
+\midrule
+Pure LLM B5 persistent           & $0.050$ & $0.500$ & 3 \\
+Hybrid B5, smaller open model  & $0.067$ & $0.517$ & 3 \\
+Hybrid B5, larger coder model  & $0.000$ & $0.500$ & 3 \\
+Heuristic att.\ / hybrid def.  & $0.347$ & $0.486$ & 3 \\
+Hybrid att.\ / heuristic def.  & $0.014$ & $0.528$ & 3 \\
+Hybrid B5, extended horizon    & $0.025$ & $0.442$ & 3 \\
+Hybrid episodic $3{\times}3$   & $0.000$ & $0.917$ & 2 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-\subsection{Emergence (RQ2, H5)}
-Encoded behaviours for the ladder were reconnaissance, privilege
-escalation and resource targeting (attacker), plus adaptive monitoring
-and dynamic isolation (defender). Post-hoc tagging against the taxonomy
-of Section~\ref{sec:problem} found additional behaviours that were
-\emph{not} encoded: delayed attack and strategic patience ($240$
-occurrences each on the persistent run), strategic resource allocation
-($24$), deception and decoy deployment ($7$ each). Delayed attack is
-exactly the stealth-pacing wait; it is a strategy discovered from the
-detection physics, not an instruction in the objective
-(``exfiltrate while minimising detection'' does not mention waiting).
-Under the definition of Section~\ref{sec:problem} these are candidate
-emergent behaviours. We do not claim they are intelligent; we claim
-they were not programmed as scripts and yet arose consistently.
-
-\subsection{What the Ladder Does Not Yet Show}
-Communication was disabled, so coalition rate is zero by construction
-(H3, H6). ESR is undefined without a paired isolation run on a
-population that can talk. LLM capability (H7) is reserved for B3--B5
-once the Ollama endpoint is attached. These are not missing controls on
-the present claim; they are the next cells of Table~\ref{tab:matrix}.
-The claim this section is entitled to is narrower and, we think,
-stronger: \emph{the co-evolutionary phenomenon exists already at
-one-versus-one, before any society of agents is introduced.}
+In summary, co-evolution and emergence are established at one-versus-one
+under heuristic policies with confidence intervals. Language-model agents
+show the same dependence on adaptation regime, but only when hybrid
+control structure permits repeated completion of the offensive chain.
+Population scaling (RQ4), ESR (H3) and coalition dynamics (H6) remain
+future work.

@@ -1,5 +1,7 @@
 # Co-Evolutionary Security of Autonomous AI Agents
 
+**Repository:** [github.com/lucadagati/security_agents](https://github.com/lucadagati/security_agents)
+
 A research framework for studying **cybersecurity as a co-evolutionary process** between autonomous attacker and defender agents.
 
 Agents repeatedly interact in a sandboxed cyber environment, adapt from experience, and may develop strategies that were never hard-coded: stealth, deception, coalitions, arms races.
@@ -126,13 +128,18 @@ runs/             experiment outputs (gitignored)
 datasets/         archival trajectories
 ```
 
-## Reproducibility
+## Reproducibility (paper experiments)
+
+The IEEE Transactions manuscript in [`paper/`](paper/) is reproduced from this repository. After setup:
 
 ```bash
-python run_experiment.py --config configs/e5.yaml
+python scripts/ladder_ci.py --seeds 100,110,120,130,140,150 --episodes 40
+python scripts/campaign_2day.py   # language-model campaign (requires Ollama)
 ```
 
-Each run directory contains `config.json`, `meta.json` (seed, config hash, git SHA), `trajectories.jsonl`, `episodes.jsonl` and `summary.json`.
+Configuration files live under `configs/ladder/`, `configs/baselines/` and
+`configs/campaign/`. Each run directory stores trajectories, episode records
+and summary metrics keyed by seed and git revision.
 
 ## IEEE Transactions paper
 

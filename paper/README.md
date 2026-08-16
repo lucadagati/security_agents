@@ -4,49 +4,18 @@ LaTeX project for the journal paper:
 
 **Co-Evolutionary Security of Autonomous AI Agents: Emergent Attack and Defense Strategies in Multi-Agent Cyber Environments**
 
-Formatted with [`IEEEtran`](https://ctan.org/pkg/ieeetran) in *journal* mode (IEEE Transactions). Natural target venues:
-
-- IEEE Transactions on Dependable and Secure Computing (TDSC) — add the `compsoc` class option
-- IEEE Transactions on Information Forensics and Security (TIFS)
-- IEEE Transactions on Artificial Intelligence
-
-The software artefact that implements the framework lives in the parent repository (`../`).
+Formatted with [`IEEEtran`](https://ctan.org/pkg/ieeetran) in *journal* mode. The accompanying software artefact is at [github.com/lucadagati/security_agents](https://github.com/lucadagati/security_agents).
 
 ## Build
 
-Requires TeX Live with `IEEEtran`, `pgfplots`, `amsmath`, and `algorithm2e`/`algorithmicx`.
-
 ```bash
-cd paper
-make          # latexmk → main.pdf
-make watch    # rebuild on change
-make distclean
+cd paper && make
 ```
 
-Or:
+## Status
 
-```bash
-pdflatex main && bibtex main && pdflatex main && pdflatex main
-```
-
-## Layout
-
-```
-main.tex                 entry point (IEEE preamble, title, authors)
-sections/                body (one file per section)
-figures/                 TikZ/PGF figures included from the body
-bib/references.bib       BibTeX database (IEEEtran.bst)
-Makefile
-```
-
-## Author block
-
-Edit the `\author{...}` and `\thanks{...}` fields in `main.tex` before submission. For TDSC, change the document class to:
-
-```latex
-\documentclass[10pt,journal,compsoc]{IEEEtran}
-```
-
-## Status of the results
-
-Section~VII currently reports the **1-versus-1 adaptation ladder** (static / episodic / persistent) run on the simulator. The E1--E8 population matrix, LLM baselines (B3--B5 on Ollama/L40), and the Kubernetes cyber range are specified in the methodology and marked as the remaining experimental programme.
+The manuscript reports a multi-seed heuristic adaptation ladder, hybrid
+language-model baselines (B3--B5), supplementary ablations, and
+confidence intervals. Population experiments E3--E8 and live Kubernetes
+validation remain future work. Reproduce the reported cells via the
+repository scripts documented in Appendix~A of the paper.

@@ -1,8 +1,8 @@
 \section{Experimental Methodology}
 \label{sec:method}
 
-\subsection{Metrics}
-Let $\mathcal{E}_T$ be the set of episodes in a run.
+Let $\mathcal{E}_T$ be the set of episodes in a run. We report attack
+success rate (ASR) and detection rate (DR):
 \begin{align}
   \mathrm{ASR}
   &=
@@ -15,34 +15,21 @@ Let $\mathcal{E}_T$ be the set of episodes in a run.
        {\bigl|\{\,e\in\mathcal{E}_T : \text{attack attempted}\,\}\bigr|}.
   \label{eq:dr}
 \end{align}
-Attack and detection costs are mean resource consumption. Recovery time
-is the mean number of turns from first compromise to restored isolation
-of the data store. Coalition rate is the fraction of episodes in which
-a reciprocal same-role component of size $\ge 2$ appears. Deception
-rate is the fraction of actions that are decoy deployments or
-stealth-pacing waits taken while holding a foothold.
-
-\paragraph{Adaptation gain.}
-$\mathrm{AG}=\mathrm{Perf}_{\mathrm{adaptive}}-\mathrm{Perf}_{\mathrm{static}}$.
-
-\paragraph{Strategy diversity and novelty.}
-Diversity is mean pairwise signature distance. Novelty is the fraction
-of episodes that introduce a taxonomy tag not seen before.
-
-\paragraph{Co-evolutionary pressure.}
-With signatures $s_A^{(t)},s_D^{(t)}$ of the two populations,
+Secondary quantities include resource costs, recovery time, coalition and
+deception rates, strategy diversity and behavioural novelty. Co-evolutionary
+pressure averages the change in attacker and defender signatures between
+consecutive episodes,
 \begin{equation}
   \mathrm{CEP}
   \;=\;
   \frac{1}{T-1}
   \sum_{t=1}^{T-1}
   \frac{\bigl\|s_A^{(t+1)}-s_A^{(t)}\bigr\|_2
-        +\bigl\|s_D^{(t+1)}-s_D^{(t)}\bigr\|_2}{2}.
+        +\bigl\|s_D^{(t+1)}-s_D^{(t)}\bigr\|_2}{2},
   \label{eq:cep}
 \end{equation}
-High CEP indicates an active arms race (RQ5).
-
-\paragraph{Emergent security risk.}
+and emergent security risk (ESR) compares failure under interaction to
+failure under isolation,
 \begin{equation}
   \mathrm{ESR}
   \;=\;
@@ -50,26 +37,27 @@ High CEP indicates an active arms race (RQ5).
        {P(\mathrm{failure}\mid \mathrm{isolation})}.
   \label{eq:esr}
 \end{equation}
-Values above $1$ mean that interaction itself introduces risk. ESR
-requires a paired run with communication disabled.
+Values above $1$ indicate interaction-induced risk. ESR requires paired
+runs and is reserved for future population studies (H3).
 
-\subsection{Baselines}
-\begin{itemize}
-\item B1/B2: rule-based attacker/defender (L0).
-\item B3: LLM agent, null memory (static).
-\item B4: LLM agent, episodic memory.
-\item B5: LLM agent, persistent memory.
-\item Heuristic adaptive policies with a stealth/vigilance parameter,
-used to validate the loop without a language model.
-\end{itemize}
+Baselines follow the B1--B5 ladder: rule-based agents (B1/B2), then
+language-model or \emph{hybrid} agents (LLM proposals constrained by
+legal capability hints, with heuristic takeover on stall) at static,
+episodic and persistent memory levels. Heuristic adaptive policies with
+stealth/vigilance parameters validate the loop without a language model.
+Table~\ref{tab:matrix} lists the full E1--E8 programme; this paper reports
+the one-versus-one ladder and B3--B5 cells. We test seven hypotheses (H1--H7)
+on adaptation gain, defender recovery, interaction risk, memory regime,
+emergence, population effects and non-monotonic model capability.
 
-\subsection{Experimental Matrix}
-Table~\ref{tab:matrix} lists the programme. Following the principle of
-starting with the smallest scientifically meaningful experiment, this
-paper reports E1-class one-versus-one ladders in
-Section~\ref{sec:results}. E3--E8 (communication, populations, dynamic
-topology, coalitions) are specified here and left as the scaling
-study.
+Each cell is replicated over multiple random seeds; we report means and
+95\% confidence intervals (Student-$t$ on seed means). Primary cells use
+six seeds; supplementary ablations use two or three seeds and are read
+directionally. Measurements are collected at three levels: step
+trajectories, episode records (outcome, costs, strategy signature) and
+run aggregates (ASR, DR, CEP, dynamics class). Table~\ref{tab:episode-record}
+illustrates one episode row; Fig.~\ref{fig:episode-dynamics} plots the
+same persistent run through time.
 
 \begin{table}[!t]
 \caption{Experimental matrix. A\,=\,attacker, D\,=\,defender.}
@@ -92,24 +80,23 @@ E8 & $10$A+$10$D & persistent & dynamic & emergence \\
 \end{tabular}
 \end{table}
 
-\subsection{Hypotheses}
-\begin{itemize}
-\item \textbf{H1} $\mathrm{ASR}_{\mathrm{adaptive}}>\mathrm{ASR}_{\mathrm{static}}$.
-\item \textbf{H2} Adaptive defenders suppress ASR, after which attackers
-recover by changing strategy.
-\item \textbf{H3} ESR increases with interaction density.
-\item \textbf{H4} Persistent memory produces stronger adaptation than
-episodic memory.
-\item \textbf{H5} Some behaviours appear that are not encoded in
-objectives.
-\item \textbf{H6} Population size changes qualitative behaviour
-(coalitions, collective strategies).
-\item \textbf{H7} Higher model capability need not produce safer
-behaviour; it may raise both offensive and defensive sophistication.
-\end{itemize}
+\begin{table}[!t]
+\caption{Illustrative per-episode record (persistent heuristic run, episode~20).}
+\label{tab:episode-record}
+\centering
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}llr@{}}
+\toprule
+\textbf{Quantity} & \textbf{Interpretation} & \textbf{Value} \\
+\midrule
+Attack success & Exfiltration achieved & no \\
+Detected & At least one alert & no \\
+Attacker / defender cost & Resource use & $21.6$ / $24.7$ \\
+Attacker stealth & Signature parameter & $0.70$ \\
+Defender vigilance & Signature parameter & $0.19$ \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-\subsection{Reproducibility}
-Every run is a YAML file specifying models, counts, topology, memory,
-communication, seed, episode count, backend and budget. The ladder in
-Section~\ref{sec:results} uses seed $100$, $40$ episodes, $20$ turns,
-three service hosts and two vulnerabilities per host, on the simulator.
+All configurations, analysis scripts and aggregate results are available
+in the public repository cited in Appendix~\ref{app:repro}.

@@ -2,20 +2,20 @@
 \label{sec:intro}
 
 \IEEEPARstart{S}{ecurity} cannot be fully understood by evaluating
-autonomous agents independently. An agent may be individually safe,
-predictable and robust, yet become a different object once it is placed
-in a population of other autonomous agents that observe it, adapt to it,
-and are themselves adapting~\cite{park2023generative,wu2023autogen,xi2023rise}.
-The resulting feedback loop---attack, observation, defense, counter-adaptation---has
-no counterpart in a single-agent red-team trial.
+autonomous agents in isolation. An agent may appear individually safe,
+predictable and robust, yet behave differently once placed among other
+autonomous agents that observe it, adapt to it, and are themselves
+adapting~\cite{park2023generative,wu2023autogen,xi2023rise}. The
+resulting feedback loop (attack, observation, defence, counter-adaptation)
+has no counterpart in a conventional single-agent red-team trial.
 
-Current work on agentic-AI security has made rapid progress on prompt
+Recent work on agentic-AI security has made rapid progress on prompt
 injection, tool misuse, memory poisoning, impersonation and
 collusion~\cite{greshake2023not,debenedetti2024agentdojo,zhan2024injecagent,chen2024agentpoison,abdelnabi2024cooperation}.
-These studies are necessary, but most of them freeze one side of the
-interaction. Either the attacker is a script, or the defender is a fixed
-policy, or the episode is too short for either side to remember the last
-encounter. The question this paper addresses is different:
+These studies are necessary, but most of them hold one side of the
+interaction fixed. Either the attacker is a script, or the defender is a
+fixed policy, or the horizon is too short for either side to remember
+prior encounters. This paper asks a complementary question:
 
 \begin{quote}
 \textit{How does cybersecurity evolve when attackers and defenders are
@@ -32,8 +32,8 @@ adaptation and history, rather than as a property of an isolated agent:
 \end{equation}
 where $\mathcal{C}$ denotes capabilities, $G$ objectives, $\mathcal{I}$
 the interaction structure, $\alpha$ the adaptation regime, and $H$ the
-accumulated experience. Equation~\eqref{eq:security-fn} is the conceptual
-shift. The benchmark we build is only the instrument.
+accumulated experience. Equation~\eqref{eq:security-fn} states the
+conceptual claim; the framework and experiments below operationalise it.
 
 The contributions are as follows.
 
@@ -44,33 +44,33 @@ populations, and we separate \emph{capability}, \emph{objective} and
 \emph{strategy} so that unexpected behaviour can be attributed to
 interaction rather than to newly granted tools
 (Section~\ref{sec:problem}).
-\item \textit{Framework.} We give an agent model, three adaptation
+\item \textit{Framework.} We specify an agent model, three adaptation
 levels (static, episodic, persistent), an interaction graph
 $G_t=(V_t,E_t)$, and an operational definition of emergence
 (Section~\ref{sec:framework}).
 \item \textit{Environment.} We implement a dual-backend cyber
-environment---a seedable in-memory simulator and a Kubernetes range---behind
-a single interface, with structured tools rather than unconstrained code
-execution (Section~\ref{sec:environment}).
+environment (a seedable in-memory simulator and a Kubernetes range)
+behind a single interface, with structured tools rather than
+unconstrained code execution (Section~\ref{sec:environment}).
 \item \textit{Metrics.} In addition to attack success and detection
-rates we introduce \emph{co-evolutionary pressure} (CEP) and
-\emph{emergent security risk} (ESR), which quantify arms races and
-interaction-induced risk (Section~\ref{sec:method}).
-\item \textit{Evidence.} A one-versus-one adaptation ladder already
-exhibits the phenomenon the framework is built to study: adaptive
-attackers evade detection that static attackers cannot, persistent
-populations enter an arms race, and several offensive and defensive
-behaviours arise without being encoded in objectives
-(Section~\ref{sec:results}).
+rates we introduce co-evolutionary pressure (CEP) and emergent security
+risk (ESR), which quantify arms races and interaction-induced risk
+(Section~\ref{sec:method}).
+\item \textit{Empirical study.} A multi-seed heuristic adaptation ladder
+shows that adaptive attackers evade detection that static attackers
+cannot, that persistent matchups enter arms races, and that several
+behaviours arise without being encoded in objectives. A complementary
+language-model evaluation shows that hybrid episodic agents succeed
+where static or persistent hybrids, pure LLM policies and larger models
+often do not (Section~\ref{sec:results}).
 \end{enumerate}
 
 The remainder of the paper is organised as follows.
-Section~\ref{sec:related} reviews agentic security, autonomous cyber
-defence, multi-agent games and evolutionary computation.
+Section~\ref{sec:related} reviews related work.
 Section~\ref{sec:problem} states the problem.
 Section~\ref{sec:framework} presents the framework.
 Section~\ref{sec:environment} describes the cyber environment.
 Section~\ref{sec:method} details the experimental methodology.
-Section~\ref{sec:results} reports the ladder results.
+Section~\ref{sec:results} reports the empirical findings.
 Section~\ref{sec:discussion} discusses implications and limitations.
 Section~\ref{sec:conclusion} concludes.

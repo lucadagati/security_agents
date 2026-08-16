@@ -1,0 +1,7 @@
+recon 44.5
+probe_service 22.1
+exploit 17.9
+wait 9.9
+harvest 3.0
+lateral 1.3
+exfiltrate 1.3

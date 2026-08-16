@@ -1,53 +1,33 @@
 \section{Discussion}
 \label{sec:discussion}
 
-\subsection{Implications}
-If the one-versus-one ladder generalises, then isolated-agent
-evaluations will systematically understate operational risk. A
-deployment that ``passed'' a static red team can still be unsafe once
-the adversary is allowed to remember last week's detections. Conversely,
-a defender that looks weak against a noisy scripted attacker may be
-adequate against a static one and inadequate against a persistent one.
-Certification of agentic systems should therefore state the adaptation
-level of both sides, not only the tools on the system under test.
+If the one-versus-one ladder generalises beyond the present sandbox,
+isolated-agent evaluations will understate operational risk: a deployment
+that passed a static red team can remain unsafe once the adversary retains
+memory of prior detections. Certification should specify the adaptation
+level of both sides. The language-model results add that deploying a
+capable model is neither a red team nor a defence; outcomes depend on
+tool constraints, memory regime and hybrid control structure. Unexpected
+tool sequences should be interpreted through strategy signatures (CEP,
+novelty), not automatically as new vulnerability classes.
 
-The emergence results caution against a second mistake: treating every
-unexpected tool sequence as a new vulnerability class. Delayed attack
-is not a new capability; it is a new \emph{use} of $\mathtt{wait}$.
-Governance and monitoring should watch strategy signatures (CEP, novelty)
-as well as individual actions.
+Equation~\eqref{eq:security-fn} treats security as a function of
+interaction and history. The heuristic ladder shows that view under
+transparent policies; the hybrid LLM cells show that the same
+instrumentation applies when decisions are model-generated, provided the
+agent completes the offensive chain often enough for adaptation to be
+observable. Negative results (static hybrid, persistent hybrid, larger
+coder model) delimit when co-evolutionary measurement is possible.
 
-\subsection{Security as an Evolutionary Process}
-Equation~\eqref{eq:security-fn} is the intended conceptual contribution.
-The practical consequence is that defence cannot be a one-time policy
-search. It has to be a standing co-evolutionary process: defenders
-need persistent memory at least as long as the attackers they face, and
-they need metrics that detect when the opponent has moved
-(CEP)~\cite{tambe2011security,hofbauer2003evolutionary}.
-Deception versus detection versus counter-deception is the loop we
-expect to dominate once LLM agents replace the heuristic policies of
-Section~\ref{sec:results}.
-
-\subsection{Limitations}
-The present evidence is a heuristic ladder on a simulated network.
-Language-model policies may discover different strategies, including
-ones that exploit the prompt rather than the environment; they may also
-fail to exploit the environment at all. The simulator's detection
-physics is a design choice ($\lambda$-exponential in suspicion); a
-different IDS model could change the value of stealth. Partial
-observability is real but coarse. The Kubernetes backend has been
-validated as an interface-compatible drop-in, not yet as a
-provisioned range with live NetworkPolicies. Population experiments
-(E4--E8) may reverse qualitative conclusions: more defenders can help
-or, past a critical interaction density, create new attack paths
-through information propagation. Finally, CEP uses a hand-crafted
-signature; a learned embedding of trajectories would be a natural
-refinement.
-
-\subsection{Threats to Validity}
-Internal: a single seed for the ladder; we will report confidence
-intervals over seeds in the camera-ready. Construct: ASR/DR do not
-capture partial compromise. External: a three-host toy network is not
-an enterprise fleet. We argue it is the right first object: if
-co-evolution does not appear here, it will not be identifiable in a
-noisier range.
+The simulator's detection physics, coarse partial observability, and
+toy-network topology limit external validity. Hybrid policies improve
+measurability but attribute success jointly to model and heuristic gate.
+The Kubernetes backend has not yet been evaluated on a provisioned range.
+Population experiments may reverse qualitative conclusions once
+communication is enabled; ESR requires paired isolation runs not yet
+executed. Primary cells use six seeds with confidence intervals;
+supplementary ablations use fewer seeds and should be read as directional.
+ASR and DR do not capture partial compromise. Nevertheless, if
+co-evolution and adaptation-regime effects do not appear in this minimal
+setting, they are unlikely to be identifiable in noisier ranges without
+stronger instrumentation.

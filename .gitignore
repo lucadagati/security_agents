@@ -9,6 +9,9 @@ dist/
 venv/
 .env
 
+# Generated campaign YAMLs (rebuilt by scripts/campaign_2day.py)
+configs/campaign/generated/
+
 # Experiment outputs
 runs/
 datasets/*.jsonl
