@@ -1,26 +1,29 @@
 \section{Co-Evolutionary Agent Security Framework}
 \label{sec:framework}
 
-Fig.~\ref{fig:architecture} shows the architecture: an agent
-population, a cyber environment, and an evaluation layer connected by
-an experiment controller. At each turn an agent receives a partial
-observation, consults memory, and selects a single structured tool; the
-environment validates parameters, applies the action, and returns a
-result. Language models, when used, never execute code: they only name
-a capability from a fixed schema~\cite{schick2023toolformer,yao2023react}.
-Heuristic policies implement the same interface, which allows the loop to
-be validated without a language model and later extended to an external
-backend.
+Fig.~\ref{fig:architecture} shows the three-layer architecture: agent
+populations, cyber environment, and evaluation/analytics connected by an
+experiment controller. The controller implements the co-evolutionary loop
+of Fig.~\ref{fig:loop}. The scientific object is the trajectory of policies
+$\pi^{(t)}\mapsto\pi^{(t+1)}$, not a single scalar score.
 
 \input{figures/architecture}
 
-Memory realises the adaptation levels of Section~\ref{sec:problem}: null
-memory for L0, an in-episode action window for L1, and a one-line
-cross-episode reflection for L2~\cite{shinn2023reflexion}. We do not
-fine-tune weights between episodes; adaptation is behavioural. Fig.~\ref{fig:loop}
-summarises the controller. Each episode can change future behaviour; the
-scientific object is the trajectory $\pi^{(t)}\mapsto\pi^{(t+1)}$, not a
-single success rate.
+\paragraph{Decision loop.}
+At each turn an agent receives a partial observation, reads memory, and
+selects one structured tool. The environment validates parameters against
+a JSON schema, applies the action, updates suspicion and compromise state,
+and returns a result. Language models propose tool names and parameters from
+a fixed schema~\cite{schick2023toolformer,yao2023react}; heuristic policies
+implement the identical interface so the measurement apparatus can be
+validated on transparent policies first (Section~\ref{sec:method-policies}).
+
+\paragraph{Memory and adaptation.}
+Null memory realises L0; an in-episode sliding window realises L1; L2 adds
+a compact cross-episode reflection~\cite{shinn2023reflexion}. Adaptation is
+behavioural and log-inspectable: no weight fine-tuning between episodes.
+Policy classes, memory semantics, hybrid gates and heuristic parameter updates
+are specified in Section~\ref{sec:method-policies}.
 
 \begin{figure}[!t]
 \centering
@@ -38,8 +41,9 @@ single success rate.
 \label{fig:loop}
 \end{figure}
 
-To quantify strategy change we use a mixed signature $s_i\in\mathbb{R}^k$:
-an explicit strategic parameter (stealth or vigilance) plus the empirical
-distribution of tool categories over a recent window. Co-evolutionary
-pressure (CEP) averages Euclidean distance between consecutive signatures
-(Eq.~\eqref{eq:cep} in Section~\ref{sec:method}).
+\paragraph{Measurement hooks.}
+Each step emits a trajectory record (observation, action, outcome,
+rationale, strategy label, memory update). Episode-level signatures feed
+CEP, dynamics classification and emergence tagging
+(Section~\ref{sec:method-analysis}). Optional coalition graphs aggregate
+same-role communication when enabled in E3--E8.

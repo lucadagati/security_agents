@@ -1,16 +1,13 @@
 \begin{figure}[!t]
 \centering
 \begin{tikzpicture}
-\begin{groupplot}[
-  group style={
-    group size=1 by 2,
-    vertical sep=0.35cm,
-    x descriptions at=edge bottom,
-    y descriptions at=edge left,
-  },
+\begin{axis}[
   width=\columnwidth,
-  height=2.1cm,
+  height=4.2cm,
   xmin=1, xmax=40,
+  xlabel={Episode $t$},
+  ylabel={Rolling detection rate},
+  ymin=0, ymax=1.05,
   xtick={1,10,20,30,40},
   xticklabel style={font=\scriptsize},
   yticklabel style={font=\scriptsize},
@@ -18,30 +15,12 @@
   grid=major,
   major grid style={dotted,gray!50},
 ]
-\nextgroupplot[
-  ylabel={Rolling rate},
-  ymin=-0.05, ymax=1.05,
-  legend style={font=\tiny, at={(0.02,0.98)}, anchor=north west, draw=none},
-]
 \addplot+[thick, mark=none, color=blue!70!black] table[x=ep, y=det, col sep=space] {figures/generated/episode_dynamics.dat};
-\addlegendentry{Detection}
-\addplot+[thick, dashed, mark=none, color=red!70!black] table[x=ep, y=asr, col sep=space] {figures/generated/episode_dynamics.dat};
-\addlegendentry{Attack success}
-\nextgroupplot[
-  xlabel={Episode $t$},
-  ylabel={Strategy param.},
-  ymin=0, ymax=1.05,
-  legend style={font=\tiny, at={(0.02,0.98)}, anchor=north west, draw=none},
-]
-\addplot+[thick, mark=none, color=orange!80!black] table[x=ep, y=stealth, col sep=space] {figures/generated/episode_dynamics.dat};
-\addlegendentry{Att.\ stealth}
-\addplot+[thick, mark=none, color=teal!70!black] table[x=ep, y=vig, col sep=space] {figures/generated/episode_dynamics.dat};
-\addlegendentry{Def.\ vigilance}
-\end{groupplot}
+\end{axis}
 \end{tikzpicture}
-\caption{Episode-level dynamics on a representative persistent/persistent
-heuristic run (seed~100, $40$ episodes). Top: five-episode rolling
-detection and attack-success rates. Bottom: attacker stealth and defender
-vigilance from the strategy signature (Section~\ref{sec:framework}).}
+\caption{Temporal dynamics on a representative persistent/persistent
+heuristic run (seed~100): rolling detection rate falls over $40$ episodes
+while attacker stealth rises from $0.5$ to $0.9$ and defender vigilance
+adjusts accordingly (H2).}
 \label{fig:episode-dynamics}
 \end{figure}

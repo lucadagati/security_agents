@@ -1,28 +1,17 @@
 \section{Conclusion}
 \label{sec:conclusion}
 
-We introduced a co-evolutionary framework for studying cybersecurity in
-autonomous multi-agent systems, in which attacker and defender agents
-interact repeatedly, retain experience, and adapt their strategies. The
-scientific object is not a benchmark catalogue but the empirical study
-of offensive and defensive dynamics, arms races, and interaction-induced
-risks that isolated evaluations cannot observe.
+We studied co-evolutionary security as a property of repeated attack--defence
+interaction under declared adaptation regimes, not of an isolated agent
+evaluated once. A heuristic adaptation ladder shows that adaptive attackers
+evade detection static attackers cannot, persistent matchups enter arms races,
+and unencoded behaviours such as patience and delayed attack appear from
+interaction. A complementary language-model campaign shows that hybrid
+episodic agents can reach measurable success while static and persistent
+hybrids cannot, so outcomes depend on memory regime and control structure
+more than on model size alone.
 
-A multi-seed one-versus-one heuristic ladder already exhibits the
-phenomenon. Static attackers are detected; adaptive attackers pace their
-actions, evade detection, and succeed more often; persistent matchups
-keep moving through strategy space and produce behaviours (patience,
-delayed attack, deception) that no script named. A complementary
-language-model study shows that hybrid episodic agents reach measurable
-attack success, whereas static hybrids, persistent hybrids and a larger
-coder model do not, so co-evolutionary outcomes depend on adaptation
-regime and control structure rather than on model size alone.
-
-Several hypotheses remain open. Population scaling, ESR under
-communication, and coalition dynamics (H3, H4 at scale, H6) require the
-E3--E8 programme of Table~\ref{tab:matrix}. High-fidelity validation on
-a provisioned Kubernetes range is a natural next step. Longer term, the
-same loop can support prediction of strategy shifts, defensive
-co-evolution as a training regime, and agent societies in which trust and
-withholding are themselves security-relevant. In all of these settings the
-methodological requirement is the same: \emph{do not freeze the opponent.}
+Open questions on population scale, interaction-induced risk and coalitions
+are specified in the E3--E8 matrix. The central methodological lesson is to
+evaluate agentic security under stated adaptation assumptions on both sides:
+\emph{do not freeze the opponent.}

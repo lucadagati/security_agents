@@ -1,39 +1,35 @@
 \section{Results}
 \label{sec:results}
 
-We report a multi-seed heuristic adaptation ladder and a complementary
-language-model evaluation on the same environment. Only adaptation level
-and policy class vary within each study.
+We report the heuristic adaptation ladder (H1, H2, H5; RQ0--RQ3, RQ5) and
+the language-model campaign (H4, H7) under the protocol of
+Section~\ref{sec:method}.
 
 \subsection{Heuristic adaptation ladder}
 \label{sec:results-ladder}
-Table~\ref{tab:ladder} and Fig.~\ref{fig:ladder} summarise the
-one-versus-one factorial (six seeds, $40$ episodes each). Static attackers
-are detected in $98.3{\pm}1.0\%$ of episodes and rarely exfiltrate,
-whether the defender adapts or not. Episodic adaptation on the attacker
-side roughly halves detection ($\mathrm{DR}=0.558{\pm}0.047$) and raises
-success (H1). The dominant mechanism is stealth pacing: after a noisy
-exploit the attacker inserts low-noise pauses so suspicion decays, a
-behaviour the static policy never selects.
+Table~\ref{tab:ladder} and Fig.~\ref{fig:ladder} summarise the factorial
+over six seeds with forty episodes each. Static attackers are detected in
+$98.3{\pm}1.0\%$ of episodes with low ASR ($0.029$--$0.046$) regardless of
+defender adaptation. When the attacker adapts, mean DR falls to
+$0.558{\pm}0.047$ and ASR rises modestly to $0.067$--$0.071$; an adaptive
+defender does not further reduce DR against a static attacker (H1 supported
+on detection more than on success).
+
+The dominant mechanism is stealth pacing: adaptive attackers insert
+low-noise pauses after noisy exploits so suspicion decays before the next
+probe, yielding emergence tags \emph{delayed attack} and \emph{strategic
+patience} (H5) despite objectives that mention only exfiltration and cost.
 
 \input{figures/ladder_bars}
 
-CEP is lowest for static/static matchups and highest when both sides adapt
-(Fig.~\ref{fig:cep-ladder}). Persistent runs are typically classified as
-\emph{arms races}: late-episode signature change exceeds early-episode
-change (Fig.~\ref{fig:arms}). On representative persistent runs, rolling
-detection falls while attacker stealth and defender vigilance trend upward
-(Fig.~\ref{fig:episode-dynamics}), the H2 pattern of suppression followed
-by strategic shift rather than convergence.
-
-Post-hoc tagging found behaviours not listed in the configured objectives,
-including delayed attack, strategic patience, deception and decoy
-deployment (H5). We do not claim general intelligence; we claim these
-patterns were not scripted yet arose consistently across seeds.
+Persistent matchups are classified as arms races: late-episode signature
+change stays elevated (Fig.~\ref{fig:arms}). On a representative run, rolling
+DR falls while attacker stealth rises from $0.5$ to $0.9$
+(Fig.~\ref{fig:episode-dynamics}), consistent with H2. CEP peaks when both
+sides adapt ($0.454{\pm}0.021$ to $0.465{\pm}0.043$).
 
 \input{figures/episode_dynamics}
 \input{figures/arms_race}
-\input{figures/cep_ladder}
 
 \begin{table}[!t]
 \caption{Heuristic adaptation ladder (mean$\pm$95\% CI, six seeds, 40 episodes).}
@@ -54,27 +50,24 @@ Persistent / persistent & $0.071{\pm}0.034$ & $0.562{\pm}0.047$ & $0.465{\pm}0.0
 
 \subsection{Language-model evaluation}
 \label{sec:results-llm}
-Pure LLM policies frequently stall in reconnaissance or misuse capabilities
-(for example, attempting credential harvest on hosts that hold none). We
-therefore report hybrid policies alongside a pure-LLM ablation
-(Table~\ref{tab:llm}). Episodic hybrid memory (B4) is the only primary
-cell with a clearly positive mean ASR ($0.139{\pm}0.052$;
-Fig.~\ref{fig:hybrid-asr}); static hybrid (B3) never exfiltrates and
-persistent hybrid (B5) remains near the floor. H4 is \emph{not} supported:
-episodic memory outperforms persistent memory in this setting.
+Pure LLM policies frequently fail to complete the offensive chain; we
+therefore report hybrid B3--B5 cells (Section~\ref{sec:method-policies}).
 
-Supplementary conditions (Table~\ref{tab:llm_ablation},
-Fig.~\ref{fig:llm-ablation}) show non-monotonic model scale, asymmetric
-matchups (heuristic attack against hybrid defence reaches the highest
-mean ASR), and low success on long-horizon and $3{\times}3$ cells.
-Fig.~\ref{fig:action-mix} shows how step-level action frequencies compose
-the hybrid attacker's behaviour on a representative B4 run. H7 is
-supported: nominal capability does not predict co-evolutionary outcomes
-without the appropriate memory regime and control structure.
+Table~\ref{tab:llm} and Fig.~\ref{fig:hybrid-asr} summarise six seeds with
+thirty episodes each. Only episodic hybrid B4 reaches clearly positive mean
+ASR ($0.139{\pm}0.052$) with non-trivial CEP ($0.247{\pm}0.021$). Static
+hybrid B3 acts but never exfiltrates ($\mathrm{ASR}=0$,
+$\mathrm{DR}=0.939{\pm}0.020$); persistent B5 stays near the floor
+($\mathrm{ASR}=0.022{\pm}0.014$). H4 is not supported: longer memory does
+not beat episodic memory.
 
 \input{figures/hybrid_memory_bars}
-\input{figures/llm_ablation_asr}
-\input{figures/action_mix}
+
+Supplementary conditions (Table~\ref{tab:llm_ablation}) show non-monotonic
+model scale (H7), high ASR ($\approx0.35$) when a heuristic attacker faces a
+hybrid defender, and near-zero ASR in the reverse matchup, indicating that
+chain completion dominates nominal capability. Extended horizons and a small
+$3{\times}3$ cell do not replicate the ladder's co-evolutionary effects.
 
 \begin{table}[!t]
 \caption{Hybrid LLM baselines B3--B5 (mean$\pm$95\% CI, six seeds, 30 episodes).}
@@ -111,9 +104,5 @@ Hybrid episodic $3{\times}3$   & $0.000$ & $0.917$ & 2 \\
 \end{tabular}
 \end{table}
 
-In summary, co-evolution and emergence are established at one-versus-one
-under heuristic policies with confidence intervals. Language-model agents
-show the same dependence on adaptation regime, but only when hybrid
-control structure permits repeated completion of the offensive chain.
-Population scaling (RQ4), ESR (H3) and coalition dynamics (H6) remain
-future work.
+Population scaling (RQ4), ESR (H3) and coalition dynamics (H6) remain for
+E3--E8 (Table~\ref{tab:matrix}).

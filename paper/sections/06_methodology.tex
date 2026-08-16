@@ -1,24 +1,94 @@
 \section{Experimental Methodology}
 \label{sec:method}
 
-Let $\mathcal{E}_T$ be the set of episodes in a run. We report attack
-success rate (ASR) and detection rate (DR):
+This section specifies what we measure, how policies adapt, and how the
+two empirical studies are executed. Section~\ref{sec:results} reports
+outcomes only; all protocol choices are defined here.
+
+\subsection{Experimental design}
+\label{sec:method-design}
+
+We run two studies on the \emph{same} environment defaults
+(Section~\ref{sec:environment}): a heuristic adaptation ladder and a
+language-model campaign. Within each study only the factors in
+Table~\ref{tab:design} vary; all other parameters are held fixed.
+
+\begin{table}[!t]
+\caption{Two-study design: varied and fixed factors.}
+\label{tab:design}
+\centering
+\setlength{\tabcolsep}{3pt}
+\small
+\begin{tabularx}{\columnwidth}{@{}lXX@{}}
+\toprule
+ & \textbf{Ladder (primary)} & \textbf{LLM campaign} \\
+\midrule
+Policies & Heuristic both sides & Hybrid B3--B5 (+ ablations) \\
+Adaptation & L0--L2 factorial & Static / episodic / persistent \\
+Episodes $\times$ seeds & $40 \times 6$ & $30 \times 6$ (primary) \\
+Communication & Disabled & Disabled \\
+\midrule
+\textbf{Fixed} & \multicolumn{2}{c}{3 hosts, 20 turns/episode, simulator backend} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The ladder crosses attacker and defender adaptation levels
+$\{\mathrm{L0,L1,L2}\}$ in five one-versus-one cells: static/static,
+static/adaptive, adaptive/static, adaptive/adaptive, and
+persistent/persistent. We begin at $1$A+$1$D because population studies
+confound adaptation with communication and role specialisation; if
+co-evolutionary pressure does not appear when only adaptation varies, adding
+agents will not rescue measurement. The E1--E8 matrix
+(Table~\ref{tab:matrix}) scales the same instrumentation to larger
+populations in future work.
+
+\subsection{Policy classes and adaptation}
+\label{sec:method-policies}
+
+\textbf{Heuristic policies} implement the same tool interface as LLM
+agents. Tunable parameters are attacker \emph{stealth} and defender
+\emph{vigilance}. After each episode, stealth rises when detections
+occurred and falls when a campaign succeeds without alert; vigilance rises
+after missed detections and relaxes after true positives. These updates are
+deterministic functions of episode outcomes, yielding a transparent baseline
+before opaque model decisions.
+
+\textbf{Memory levels} follow Section~\ref{sec:problem}: L0 fixes policy
+and memory; L1 keeps an in-episode action window cleared at each reset; L2
+retains a one-line cross-episode reflection (text for LLM agents, reflection
+plus parameter carry-over for heuristics). No weight fine-tuning occurs
+between episodes.
+
+\textbf{Hybrid LLM policies} address stall and illegal proposals on our
+arena. The model receives legal capability hints and proposes one schema-valid
+tool per turn. A heuristic gate takes over after repeated invalid proposals,
+zero progress toward the data store, or token-budget exhaustion; the gate uses
+the same heuristic as the ladder. Hybrid steps are logged separately so that
+ASR/DR attribute joint model-and-gate behaviour conservatively. Pure LLM
+ablations disable the gate and are interpreted directionally only.
+
+Baselines B1/B2 are rule-based L0 agents; B3--B5 are LLM or hybrid agents at
+L0, L1 and L2 respectively.
+
+\subsection{Metrics and hypotheses}
+\label{sec:method-metrics}
+
+Let $\mathcal{E}_T$ be episodes in a run. Primary outcome metrics are
 \begin{align}
   \mathrm{ASR}
   &=
-  \frac{\bigl|\{\,e\in\mathcal{E}_T : \text{exfiltration succeeded}\,\}\bigr|}
-       {\bigl|\{\,e\in\mathcal{E}_T : \text{attack attempted}\,\}\bigr|},
+  \frac{\bigl|\{\,e : \text{exfiltration succeeded}\,\}\bigr|}
+       {\bigl|\{\,e : \text{attack attempted}\,\}\bigr|},
   \label{eq:asr}\\[2pt]
   \mathrm{DR}
   &=
-  \frac{\bigl|\{\,e\in\mathcal{E}_T : \text{at least one detection}\,\}\bigr|}
-       {\bigl|\{\,e\in\mathcal{E}_T : \text{attack attempted}\,\}\bigr|}.
+  \frac{\bigl|\{\,e : \text{at least one detection}\,\}\bigr|}
+       {\bigl|\{\,e : \text{attack attempted}\,\}\bigr|}.
   \label{eq:dr}
 \end{align}
-Secondary quantities include resource costs, recovery time, coalition and
-deception rates, strategy diversity and behavioural novelty. Co-evolutionary
-pressure averages the change in attacker and defender signatures between
-consecutive episodes,
+Timeouts and illegal actions remain in the denominator so stall behaviour is
+visible. Process metrics include co-evolutionary pressure
 \begin{equation}
   \mathrm{CEP}
   \;=\;
@@ -28,36 +98,18 @@ consecutive episodes,
         +\bigl\|s_D^{(t+1)}-s_D^{(t)}\bigr\|_2}{2},
   \label{eq:cep}
 \end{equation}
-and emergent security risk (ESR) compares failure under interaction to
-failure under isolation,
+where $s_i^{(t)}$ mixes a strategic scalar (stealth or vigilance) with the
+recent tool-category distribution. Emergent security risk
 \begin{equation}
   \mathrm{ESR}
   \;=\;
   \frac{P(\mathrm{failure}\mid \mathrm{interaction})}
-       {P(\mathrm{failure}\mid \mathrm{isolation})}.
+       {P(\mathrm{failure}\mid \mathrm{isolation})}
   \label{eq:esr}
 \end{equation}
-Values above $1$ indicate interaction-induced risk. ESR requires paired
-runs and is reserved for future population studies (H3).
-
-Baselines follow the B1--B5 ladder: rule-based agents (B1/B2), then
-language-model or \emph{hybrid} agents (LLM proposals constrained by
-legal capability hints, with heuristic takeover on stall) at static,
-episodic and persistent memory levels. Heuristic adaptive policies with
-stealth/vigilance parameters validate the loop without a language model.
-Table~\ref{tab:matrix} lists the full E1--E8 programme; this paper reports
-the one-versus-one ladder and B3--B5 cells. We test seven hypotheses (H1--H7)
-on adaptation gain, defender recovery, interaction risk, memory regime,
-emergence, population effects and non-monotonic model capability.
-
-Each cell is replicated over multiple random seeds; we report means and
-95\% confidence intervals (Student-$t$ on seed means). Primary cells use
-six seeds; supplementary ablations use two or three seeds and are read
-directionally. Measurements are collected at three levels: step
-trajectories, episode records (outcome, costs, strategy signature) and
-run aggregates (ASR, DR, CEP, dynamics class). Table~\ref{tab:episode-record}
-illustrates one episode row; Fig.~\ref{fig:episode-dynamics} plots the
-same persistent run through time.
+requires paired isolation runs and is deferred (H3). Table~\ref{tab:hyp}
+lists hypotheses and their status; H1--H2 and H5 are tested on the ladder,
+H4 and H7 on hybrid LLM cells, H3 and H6 on future population work.
 
 \begin{table}[!t]
 \caption{Experimental matrix. A\,=\,attacker, D\,=\,defender.}
@@ -81,6 +133,86 @@ E8 & $10$A+$10$D & persistent & dynamic & emergence \\
 \end{table}
 
 \begin{table}[!t]
+\caption{Hypotheses and status in the present study.}
+\label{tab:hyp}
+\centering
+\setlength{\tabcolsep}{2pt}
+\small
+\begin{tabularx}{\columnwidth}{@{}lXc@{}}
+\toprule
+\textbf{H} & \textbf{Statement} & \textbf{Status} \\
+\midrule
+H1 & Adaptive ASR / evasion $>$ static & Supported (DR) \\
+H2 & Defender suppresses; attacker shifts strategy & Supported \\
+H3 & ESR increases with interaction density & Deferred \\
+H4 & Persistent memory $>$ episodic & Not supported (LLM) \\
+H5 & Unencoded behaviours appear & Supported \\
+H6 & Population changes qualitative behaviour & Deferred \\
+H7 & Capability $\not\Rightarrow$ safer outcomes & Supported \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Analysis pipeline}
+\label{sec:method-analysis}
+
+Data are collected at three levels: step trajectories, episode records and
+run aggregates (Table~\ref{tab:episode-record}). After each run:
+
+\begin{enumerate}
+\item \textbf{Signatures and CEP.} Population signatures $s_A^{(t)}$,
+  $s_D^{(t)}$ are computed per episode; CEP is Eq.~\eqref{eq:cep}.
+\item \textbf{Dynamics class.} Runs are labelled stable equilibrium,
+  converging, or arms race from early vs.\ late signature change, mean CEP
+  relative to a seed baseline, and DR/ASR trends over the horizon. Labels
+  are descriptive summaries, not game-theoretic equilibrium proofs.
+\item \textbf{Emergence tagging.} Each role declares an encoded set
+  $B_i^{\mathrm{enc}}$ (Table~\ref{tab:encoded}). Post-hoc tags (delayed
+  attack, strategic patience, selective investigation, etc.) that recur
+  across seeds but never appear in $B_i^{\mathrm{enc}}$ become candidate
+  emergent behaviours; single-episode outliers are excluded.
+\end{enumerate}
+
+Supplementary LLM cells (pure LLM, model scale, asymmetric matchups,
+extended horizon, a small $3{\times}3$ population) use two or three seeds
+and are not used for primary claims. Asymmetric cells isolate chain
+completion from adaptation on the opposite side.
+
+\subsection{Statistical protocol}
+\label{sec:method-stats}
+
+Primary ladder and B3--B5 cells use six seeds
+($\{100,110,\ldots,150\}$ for the ladder). We report seed-level means with
+95\% Student-$t$ confidence intervals. Each run is keyed by experiment
+configuration, random seed and repository revision; trajectories and
+aggregates are written automatically. Heuristic ladder cells run fully offline;
+language-model cells require a local or remote Ollama endpoint. Runs are
+checkpointed; episode CSVs feed aggregate tables and trajectory logs feed
+steps 1--3 above. The repository separates environment physics, policy
+implementations, experiment manifests and analysis notebooks so that
+Tables~\ref{tab:ladder}--\ref{tab:llm_ablation} can be regenerated from raw
+logs without duplicating command-line transcripts in the manuscript
+(\hyperref[sec:code]{Code Availability}).
+
+\begin{table}[!t]
+\caption{Encoded behaviour sets and representative emergent tags (heuristic ladder).}
+\label{tab:encoded}
+\centering
+\setlength{\tabcolsep}{3pt}
+\small
+\begin{tabularx}{\columnwidth}{@{}lXX@{}}
+\toprule
+\textbf{Role} & \textbf{$B_i^{\mathrm{enc}}$} & \textbf{Emergent candidates} \\
+\midrule
+Attacker & recon., priv.\ esc., targeting
+  & delayed attack, patience, stealth pacing \\
+Defender & adaptive monitoring, isolation
+  & selective investigation, deception response \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[!t]
 \caption{Illustrative per-episode record (persistent heuristic run, episode~20).}
 \label{tab:episode-record}
 \centering
@@ -97,6 +229,3 @@ Defender vigilance & Signature parameter & $0.19$ \\
 \bottomrule
 \end{tabular}
 \end{table}
-
-All configurations, analysis scripts and aggregate results are available
-in the public repository cited in Appendix~\ref{app:repro}.

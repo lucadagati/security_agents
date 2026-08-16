@@ -1,33 +1,36 @@
 \section{Discussion}
 \label{sec:discussion}
 
-If the one-versus-one ladder generalises beyond the present sandbox,
-isolated-agent evaluations will understate operational risk: a deployment
-that passed a static red team can remain unsafe once the adversary retains
-memory of prior detections. Certification should specify the adaptation
-level of both sides. The language-model results add that deploying a
-capable model is neither a red team nor a defence; outcomes depend on
-tool constraints, memory regime and hybrid control structure. Unexpected
-tool sequences should be interpreted through strategy signatures (CEP,
-novelty), not automatically as new vulnerability classes.
+Co-evolutionary security phenomena appear already in one-versus-one adaptive
+cyber games and are visible in process metrics (CEP, dynamics class,
+emergence tags), not only in ASR. Language-model agents add a capability gap
+that must be separated from adaptation effects through the hybrid protocol
+of Section~\ref{sec:method-policies}.
 
-Equation~\eqref{eq:security-fn} treats security as a function of
-interaction and history. The heuristic ladder shows that view under
-transparent policies; the hybrid LLM cells show that the same
-instrumentation applies when decisions are model-generated, provided the
-agent completes the offensive chain often enough for adaptation to be
-observable. Negative results (static hybrid, persistent hybrid, larger
-coder model) delimit when co-evolutionary measurement is possible.
+\paragraph{Implications for evaluation.}
+Evaluations that freeze the opponent will mis-state risk: a defender that
+``passes'' against a static red team may fail against an adversary that
+remembers prior detections and adjusts stealth. Reports should disclose
+adaptation level and memory regime on \emph{both} sides, plus control
+structure when LLMs participate (schemas, hybrid gates, reflection format),
+not only model identity or tool inventory.
 
-The simulator's detection physics, coarse partial observability, and
-toy-network topology limit external validity. Hybrid policies improve
-measurability but attribute success jointly to model and heuristic gate.
-The Kubernetes backend has not yet been evaluated on a provisioned range.
-Population experiments may reverse qualitative conclusions once
-communication is enabled; ESR requires paired isolation runs not yet
-executed. Primary cells use six seeds with confidence intervals;
-supplementary ablations use fewer seeds and should be read as directional.
-ASR and DR do not capture partial compromise. Nevertheless, if
-co-evolution and adaptation-regime effects do not appear in this minimal
-setting, they are unlikely to be identifiable in noisier ranges without
-stronger instrumentation.
+\paragraph{Emergence and monitoring.}
+Unexpected tool sequences need not denote new vulnerability classes. Delayed
+attack here is strategic use of an existing low-noise action under the
+detection law of Section~\ref{sec:environment}. Monitoring should track
+strategy signatures and co-evolutionary pressure alongside atomic indicators.
+
+\paragraph{Limitations.}
+The simulator's detection law, coarse observability and three-host topology
+limit external validity. Hybrid success attributes jointly to model and gate;
+supplementary LLM cells use fewer seeds. Population experiments and paired ESR
+runs (H3, H6) may change qualitative conclusions; the Kubernetes backend has
+not been evaluated on a live range.
+
+\paragraph{Future work.}
+The E3--E8 matrix extends the same protocol to communication, graph topology
+and larger populations. Paired ESR runs will test H3; Kubernetes validation
+will probe infrastructure realism. Evaluation reports could state the
+adaptation ladder cell and observed dynamics class as a \emph{regime
+declaration} rather than a single pass/fail bit.

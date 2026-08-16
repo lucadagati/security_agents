@@ -1,71 +1,70 @@
 \section{Background and Related Work}
 \label{sec:related}
 
-We group prior work into five strands. The gap this paper occupies is
-their combination: autonomous agents, a cybersecurity environment,
-repeated interaction, strategy adaptation, and co-evolution.
+Prior work touches co-evolutionary security from several directions, but
+rarely combines all of the following: autonomous agents on both sides, a
+cybersecurity environment, repeated episodes, explicit adaptation levels,
+and reproducible measurement of strategy change. We review five strands and
+ summarise the gap in Table~\ref{tab:gap}.
 
-\subsection{LLM Agents and Tool Use}
+\paragraph{LLM agents and tool use.}
 ReAct-style loops couple reasoning with acting through external
-tools~\cite{yao2023react,schick2023toolformer}. Systems such as AutoGen,
-generative-agent societies and commercial GPT agents show that multiple
-language-model instances can plan, delegate and persist
-memory~\cite{wu2023autogen,park2023generative,xi2023rise,shinn2023reflexion}.
-We adopt a deliberately simple loop (goal, observation, memory, tool
-selection) so that strategy variation can be attributed to adaptation
-level rather than to planner architecture.
+tools~\cite{yao2023react,schick2023toolformer}. Multi-agent systems such as
+AutoGen and generative-agent societies show that language-model instances
+can plan, delegate and persist memory~\cite{wu2023autogen,park2023generative,xi2023rise,shinn2023reflexion}.
+These architectures increase the attack surface (tools, memory, messages)
+but do not, by themselves, define a co-evolutionary evaluation protocol.
+We adopt a deliberately simple decision loop so that differences across
+runs can be traced to adaptation level rather than planner design. Planner
+complexity (multi-agent debate, retrieval, code synthesis) is orthogonal
+to the question we ask: whether \emph{memory regime} and \emph{opponent
+adaptation} change measurable security outcomes when the tool catalogue
+and detection physics are held fixed.
 
-\subsection{Security of Agentic Systems}
-Indirect prompt injection~\cite{greshake2023not}, transferable
-jailbreaks~\cite{zou2023universal} and systematic red
-teaming~\cite{perez2022red} established that language models can be
-steered into unintended actions. For \emph{agents} the attack surface
-grows: tool misuse, memory poisoning and environment injection are now
-benchmarked by AgentDojo, InjecAgent and
-AgentPoison~\cite{debenedetti2024agentdojo,zhan2024injecagent,chen2024agentpoison}.
-Multi-agent studies further document collusion and steganographic
-coordination~\cite{abdelnabi2024cooperation}. These evaluations are
-mostly attacker-centric or one-shot. They do not ask what happens when
-the defender is an equally autonomous learner that remembers previous
-episodes.
+\paragraph{Security of agentic systems.}
+Indirect prompt injection~\cite{greshake2023not}, jailbreaks~\cite{zou2023universal}
+and systematic red teaming~\cite{perez2022red} show that models can be
+steered into unintended actions. Agent-specific benchmarks (AgentDojo,
+InjecAgent, AgentPoison) extend this to tool misuse, memory poisoning and
+environment injection~\cite{debenedetti2024agentdojo,zhan2024injecagent,chen2024agentpoison}.
+Multi-agent studies document collusion and steganographic
+coordination~\cite{abdelnabi2024cooperation}. The typical evaluation
+freezes the defender or truncates the horizon; it does not measure what
+happens when a defensive agent also remembers and adapts.
 
-\subsection{Autonomous Cyber Defence and Cyber Ranges}
-High-fidelity ranges and gyms (CybORG/CAGE, CyberBattleSim, FARLAND)
-let reinforcement-learning defenders operate on emulated
-networks~\cite{standen2021cyborg,microsoft2021cyberbattlesim,molina2021network}.
-MITRE ATT\&CK provides the vocabulary for adversary
-behaviour~\cite{strom2018attck}. These environments typically train a
-defender against a scripted or slowly varying attacker, or an attacker
-against a fixed defender. Co-evolution of \emph{both} populations of
-LLM-based agents, with persistent memory and an explicit emergence
-criterion, is not their object of study.
+\paragraph{Autonomous cyber defence and cyber ranges.}
+CybORG/CAGE, CyberBattleSim and related gyms let learning agents operate
+on emulated networks~\cite{standen2021cyborg,microsoft2021cyberbattlesim,molina2021network}.
+MITRE ATT\&CK supplies vocabulary for adversary
+behaviour~\cite{strom2018attck}. These platforms emphasise high-fidelity
+environments and defender training against scripted or slowly varying
+attackers. Co-evolution of \emph{both} sides under declared memory regimes,
+with explicit emergence criteria, is outside their usual experimental
+design. Our simulator backend is intentionally smaller in topology so that
+factorial sweeps over adaptation remain tractable; the optional Kubernetes
+path preserves interface compatibility for later fidelity studies.
 
-\subsection{Security Games and Multi-Agent Learning}
+\paragraph{Security games and multi-agent learning.}
 Stackelberg security games allocate defensive resources against a best
 responding attacker~\cite{tambe2011security}. Multi-agent reinforcement
 learning studies cooperation and competition under partial
 observability~\cite{lowe2017multi,foerster2018counterfactual,kaelbling1998planning}.
-The present work sits closer to the latter: both sides learn, neither is
-assumed to hold a closed-form best response, and the state is a cyber
-environment rather than an abstract matrix game.
+Our setting is closer to the latter (both sides learn; no closed-form best
+response), but grounded in a cyber environment with structured tools and
+logged trajectories rather than an abstract matrix game. Unlike classical
+repeated games with known payoffs, tool outcomes here depend on hidden host
+state and stochastic detection, which motivates reporting DR and CEP alongside
+any success metric.
 
-\subsection{Evolutionary Computation and Arms Races}
-Co-evolution as a machine-learning method dates at least to Hillis'
-sorting networks and to competitive fitness sharing~\cite{hillis1990co,rosin1997new}.
-Evolutionary game theory supplies the language of replicator dynamics
-and evolutionarily stable strategies~\cite{hofbauer2003evolutionary,weibull1995evolutionary}.
-We do not run a genetic algorithm on agent weights. We study
-\emph{strategic} co-evolution: policies change because agents remember
-outcomes and alter subsequent tool choices. The analogy is the security
-arms race, not neuroevolution.
-
-\subsection{Research Gap}
-Table~\ref{tab:gap} summarises the gap. Single-agent security omits
-strategic interaction. Agent-to-agent protocol attacks often freeze the
-adversary. Multi-agent collusion studies rarely last long enough for
-cross-episode learning. Autonomous defence evaluates the defender.
-Evolutionary AI rarely uses a cyber environment. The missing combination
-is the one this paper constructs.
+\paragraph{Evolutionary computation.}
+Co-evolution as a machine-learning method dates to competitive co-evolved
+sorting networks and fitness sharing~\cite{hillis1990co,rosin1997new};
+evolutionary game theory provides replicator dynamics and evolutionarily
+stable strategies~\cite{hofbauer2003evolutionary,weibull1995evolutionary}.
+We do not evolve network weights. We study \emph{behavioural}
+co-evolution: policies change because agents remember outcomes and alter
+subsequent tool choices. The analogy is a security arms race expressed
+through strategy signatures and episode dynamics, not neuroevolution.
 
 \begin{table}[!t]
 \caption{Related directions and the limitation this work addresses.}
@@ -87,6 +86,12 @@ Security games~\cite{tambe2011security}
   & Closed-form or scripted best response \\
 Evolutionary AI~\cite{rosin1997new}
   & Rarely a cyber environment \\
+\midrule
+This work & Both sides adapt; cyber env.; measured co-evolution \\
 \bottomrule
 \end{tabularx}
 \end{table}
+
+The gap is therefore not a missing benchmark feature but a missing
+\emph{experimental question}: what changes when adaptation is a first-class
+parameter on both sides of a repeated cyber interaction?

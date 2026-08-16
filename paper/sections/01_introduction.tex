@@ -1,29 +1,33 @@
 \section{Introduction}
 \label{sec:intro}
 
-\IEEEPARstart{S}{ecurity} cannot be fully understood by evaluating
-autonomous agents in isolation. An agent may appear individually safe,
-predictable and robust, yet behave differently once placed among other
-autonomous agents that observe it, adapt to it, and are themselves
-adapting~\cite{park2023generative,wu2023autogen,xi2023rise}. The
-resulting feedback loop (attack, observation, defence, counter-adaptation)
-has no counterpart in a conventional single-agent red-team trial.
+\IEEEPARstart{S}{ecurity} evaluations of autonomous AI agents are
+usually static. A model is red-teamed once, a defender is scored against
+a fixed script, or both sides reset after every episode. That setting
+measures isolated capability, not the dynamics that appear when
+attackers and defenders \emph{both} learn from prior encounters. Yet
+modern agent stacks already support persistent memory, tool use and
+multi-agent coordination~\cite{park2023generative,wu2023autogen,xi2023rise,shinn2023reflexion}.
+Once deployed, they will not face a frozen opponent; they will face an
+adversary (or a defensive stack) that adapts. Red-teaming reports that
+score a model on a fixed prompt suite therefore measure a snapshot, not
+the trajectory that arises when the defender patches, rotates credentials,
+or deploys deception after the first probe.
 
-Recent work on agentic-AI security has made rapid progress on prompt
-injection, tool misuse, memory poisoning, impersonation and
-collusion~\cite{greshake2023not,debenedetti2024agentdojo,zhan2024injecagent,chen2024agentpoison,abdelnabi2024cooperation}.
-These studies are necessary, but most of them hold one side of the
-interaction fixed. Either the attacker is a script, or the defender is a
-fixed policy, or the horizon is too short for either side to remember
-prior encounters. This paper asks a complementary question:
+Recent agentic-security work has documented prompt injection, tool
+misuse, memory poisoning and collusion~\cite{greshake2023not,debenedetti2024agentdojo,zhan2024injecagent,chen2024agentpoison,abdelnabi2024cooperation}.
+These results are essential, but they rarely let \emph{both} sides
+adapt over a long horizon. The question we study is therefore
+complementary to one-shot robustness testing:
 
 \begin{quote}
 \textit{How does cybersecurity evolve when attackers and defenders are
 autonomous learning agents rather than static programs?}
 \end{quote}
 
-We treat security as a function of capabilities, goals, interaction,
-adaptation and history, rather than as a property of an isolated agent:
+We answer it in two steps. First, we propose a formal view of security
+as a function of capabilities, goals, interaction, adaptation and
+history rather than as a property of an isolated agent:
 \begin{equation}
   \mathrm{Security}
   \;=\;
@@ -32,45 +36,31 @@ adaptation and history, rather than as a property of an isolated agent:
 \end{equation}
 where $\mathcal{C}$ denotes capabilities, $G$ objectives, $\mathcal{I}$
 the interaction structure, $\alpha$ the adaptation regime, and $H$ the
-accumulated experience. Equation~\eqref{eq:security-fn} states the
-conceptual claim; the framework and experiments below operationalise it.
+accumulated experience. Second, we build an experimental platform and
+use it to measure whether co-evolutionary phenomena appear already in
+the smallest scientifically meaningful setting: one attacker and one
+defender, repeated episodes, controlled adaptation levels.
 
-The contributions are as follows.
-
+Our contributions are fivefold.
 \begin{enumerate}
-\item \textit{Problem formulation.} We formalise co-evolutionary agent
-security as a partially observable, repeated game between learning
-populations, and we separate \emph{capability}, \emph{objective} and
-\emph{strategy} so that unexpected behaviour can be attributed to
-interaction rather than to newly granted tools
-(Section~\ref{sec:problem}).
-\item \textit{Framework.} We specify an agent model, three adaptation
-levels (static, episodic, persistent), an interaction graph
-$G_t=(V_t,E_t)$, and an operational definition of emergence
-(Section~\ref{sec:framework}).
-\item \textit{Environment.} We implement a dual-backend cyber
-environment (a seedable in-memory simulator and a Kubernetes range)
-behind a single interface, with structured tools rather than
-unconstrained code execution (Section~\ref{sec:environment}).
-\item \textit{Metrics.} In addition to attack success and detection
-rates we introduce co-evolutionary pressure (CEP) and emergent security
-risk (ESR), which quantify arms races and interaction-induced risk
-(Section~\ref{sec:method}).
-\item \textit{Empirical study.} A multi-seed heuristic adaptation ladder
-shows that adaptive attackers evade detection that static attackers
-cannot, that persistent matchups enter arms races, and that several
-behaviours arise without being encoded in objectives. A complementary
-language-model evaluation shows that hybrid episodic agents succeed
-where static or persistent hybrids, pure LLM policies and larger models
-often do not (Section~\ref{sec:results}).
+\item A problem formulation that separates capability, objective and
+strategy, so that unexpected behaviour can be attributed to interaction
+rather than to newly granted tools (Section~\ref{sec:problem}).
+\item A co-evolutionary agent framework with three adaptation levels,
+an interaction graph, trajectory logging and operational emergence
+criteria (Section~\ref{sec:framework}).
+\item A dual-backend cyber environment (seedable simulator and optional
+Kubernetes range) with partial observability and structured tools rather
+than unconstrained code execution (Section~\ref{sec:environment}).
+\item Metrics, a two-study protocol and analysis pipeline (CEP, dynamics
+class, emergence tagging; Section~\ref{sec:method}).
+\item Empirical evidence that co-evolutionary phenomena appear at one-versus-one
+under stated adaptation regimes (Section~\ref{sec:results}).
 \end{enumerate}
 
-The remainder of the paper is organised as follows.
-Section~\ref{sec:related} reviews related work.
-Section~\ref{sec:problem} states the problem.
-Section~\ref{sec:framework} presents the framework.
-Section~\ref{sec:environment} describes the cyber environment.
-Section~\ref{sec:method} details the experimental methodology.
-Section~\ref{sec:results} reports the empirical findings.
-Section~\ref{sec:discussion} discusses implications and limitations.
-Section~\ref{sec:conclusion} concludes.
+The paper is organised as follows. Section~\ref{sec:related} situates
+the work. Sections~\ref{sec:problem}--\ref{sec:environment} present the
+formal setting, framework and environment. Section~\ref{sec:method}
+defines metrics, policies and protocol. Section~\ref{sec:results}
+reports findings. Sections~\ref{sec:discussion}--\ref{sec:conclusion}
+discuss implications and conclude.

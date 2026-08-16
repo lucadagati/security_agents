@@ -2,34 +2,33 @@
 \label{sec:environment}
 
 The environment models a layered enterprise network
-(Fig.~\ref{fig:network}): an external attacker, a gateway, service hosts
-and a protected data store. Hosts carry sampled vulnerabilities; service
-hosts may hold credentials that unlock deeper targets. Defenders can raise
-monitoring, investigate, isolate hosts, rotate credentials, block ingress
-or deploy decoys.
+(Fig.~\ref{fig:network}). An external attacker faces a gateway, service
+hosts and a protected data store. The attacker wins by exfiltrating from
+the store; the defender wins by detecting, containing and recovering first.
 
 \input{figures/network}
 
-Agents act only through a fixed catalogue of structured offensive and
-defensive tools (reconnaissance through data exfiltration on the attack
-side; monitoring, containment and deception on the defence side). Tools
-are validated against JSON schemas; the kill-chain ordering is an
-environment property, not a scripted policy. A static heuristic may follow
-that order linearly, whereas adaptive or language-model agents may wait,
-diversify or communicate. The full catalogue is documented in the
-open-source release (Appendix~\ref{app:repro}).
+\paragraph{Tools and kill chain.}
+Agents interact through a fixed catalogue of structured offensive and
+defensive tools (reconnaissance through exfiltration; monitoring through
+ingress control). Each tool has a resource cost and noise profile; parameters
+are schema-validated before taking effect. Exfiltration requires composing a
+multi-step chain under partial observability: reconnaissance, foothold,
+optional credential access, lateral movement, then exfiltration. Transition
+legality is enforced by the environment API, not by agent scripts. Tool
+definitions and JSON schemas are maintained in the open-source artefact
+(\hyperref[sec:code]{Code Availability}).
 
-Attackers initially know nothing; reconnaissance and probing reveal
-structure. Defenders observe suspicion only where they monitor. Noisy
-actions raise suspicion; an automatic detector fires with probability
-$1-e^{-\lambda \sigma}$, after which suspicion and monitoring decay.
-Inserting low-noise pauses after high-noise actions (stealth pacing) is
-therefore a meaningful strategy discovered from the physics of detection,
-not from an explicit objective to ``wait.''
+\paragraph{Partial observability and detection.}
+Attackers begin with no host knowledge; defenders observe suspicion only on
+monitored hosts. Noisy actions increase suspicion; detection fires with
+probability $1-e^{-\lambda \sigma}$. Suspicion and monitoring intensity decay
+each turn, which makes low-noise pauses after high-noise actions viable even
+when objectives never mention waiting (Section~\ref{sec:results-ladder}).
 
-The same interface is implemented by an in-memory simulator (used for the
-results below) and by an optional Kubernetes backend that mirrors selected
-defensive actions onto a sandbox cluster~\cite{standen2021cyborg,microsoft2021cyberbattlesim}.
-Every step is logged as a trajectory record (observation, action,
-outcome, rationale, strategy label, memory update) keyed by experiment
-configuration, seed and repository revision~\cite{park2023generative}.
+\paragraph{Backends and defaults.}
+All reported experiments use the in-memory simulator for reproducibility; an
+optional Kubernetes backend implements the same interface. Default instances
+use three service hosts, two vulnerabilities per host, twenty turns per
+episode, and no inter-agent communication unless noted in
+Table~\ref{tab:matrix}.
