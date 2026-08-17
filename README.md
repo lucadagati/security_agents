@@ -123,14 +123,16 @@ scenarios/        default cyber-range description
 docker/           Postgres compose
 src/coevsec/      Python package
 tests/            unit + integration tests
-paper/            IEEE Transactions LaTeX manuscript
 runs/             experiment outputs (gitignored)
 datasets/         archival trajectories
 ```
 
+The IEEE Transactions LaTeX manuscript is maintained locally under `paper/` and is
+**not** published in this repository.
+
 ## Reproducibility (paper experiments)
 
-The IEEE Transactions manuscript in [`paper/`](paper/) is reproduced from this repository. After setup:
+Seed-level aggregates and analysis scripts ship in this repository. After setup:
 
 ```bash
 python scripts/ladder_ci.py --seeds 100,110,120,130,140,150 --episodes 40
@@ -141,12 +143,6 @@ Configuration files live under `configs/ladder/`, `configs/baselines/` and
 `configs/campaign/`. Each run directory stores trajectories, episode records
 and summary metrics keyed by seed and git revision.
 
-## IEEE Transactions paper
-
-The journal manuscript lives in [`paper/`](paper/). Build with:
-
-```bash
-cd paper && make
-```
-
-See [`paper/README.md`](paper/README.md) for venue notes (TDSC / TIFS / TAI) and how to switch the `compsoc` class option.
+Generated LaTeX tables and figures for the manuscript are written under
+`paper/figures/` when you run `scripts/paper_analysis.py` and
+`scripts/generate_paper_figures.py` locally (the `paper/` tree is not on GitHub).

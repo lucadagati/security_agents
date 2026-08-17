@@ -21,20 +21,12 @@ datasets/**/*.jsonl
 !datasets/.gitkeep
 *.log
 
-# Analysis artifacts
+# IEEE manuscript (local only; not published on GitHub)
+paper/
+
 analysis_out/
 *.png
 !docs/**/*.png
-
-# LaTeX (paper/ has its own .gitignore; keep root clean of aux)
-paper/*.aux
-paper/*.bbl
-paper/*.blg
-paper/*.log
-paper/*.out
-paper/*.fls
-paper/*.fdb_latexmk
-paper/*.synctex.gz
 
 # OS / editor
 .DS_Store
