@@ -1,7 +1,34 @@
 \section*{Code Availability}
 \label{sec:code}
 
-The \texttt{coevsec} implementation, declarative experiment configurations,
-analysis scripts, and instructions to reproduce the heuristic ladder and
-language-model cells reported in Section~\ref{sec:results} are available at
-\url{https://github.com/lucadagati/security_agents}.
+The \texttt{coevsec} implementation, experiment configurations, and analysis
+scripts are in this repository. To reproduce reported tables and figures:
+
+\begin{enumerate}
+\item \textbf{Heuristic ladder:}
+  \texttt{python scripts/ladder\_ci.py} $\rightarrow$
+  \texttt{runs/ci/ladder\_ci.json}.
+\item \textbf{Statistics:}
+  \texttt{python scripts/paper\_analysis.py} $\rightarrow$
+  \texttt{analysis\_out/paper\_stats.json} and
+  \texttt{paper/figures/generated/stats\_*.tex}.
+\item \textbf{Figures:}
+  \texttt{python scripts/generate\_paper\_figures.py} $\rightarrow$
+  \texttt{paper/figures/}.
+\item \textbf{LLM campaign (optional):}
+  \texttt{python scripts/campaign\_2day.py --phase 1\_hybrid\_ci} with Ollama
+  (\texttt{qwen2.5:14b}).
+\item \textbf{Export manifest:}
+  \texttt{python scripts/export\_paper\_data.py} $\rightarrow$
+  \texttt{data/paper\_runs/manifest.json}.
+\item \textbf{PDF:} \texttt{make -C paper pdf}.
+\end{enumerate}
+
+Seed-level aggregates shipped with the paper live under
+\texttt{data/paper\_runs/} (\texttt{ladder\_ci.json},
+\texttt{campaign\_final\_report.json}). Full trajectories remain under
+\texttt{runs/} (not bundled; regenerate via the commands above).
+
+Repository: \url{https://github.com/lucadagati/security_agents} (must be
+public at submission; set visibility before review). Working-tree commit when
+this manuscript was built: \texttt{d931a07}.

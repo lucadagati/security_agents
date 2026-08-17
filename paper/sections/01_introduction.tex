@@ -7,7 +7,7 @@ a fixed script, or both sides reset after every episode. That setting
 measures isolated capability, not the dynamics that appear when
 attackers and defenders \emph{both} learn from prior encounters. Yet
 modern agent stacks already support persistent memory, tool use and
-multi-agent coordination~\cite{park2023generative,wu2023autogen,xi2023rise,shinn2023reflexion}.
+multi-agent coordination~\cite{park2023generative,wu2023autogen,xi2025rise,shinn2023reflexion}.
 Once deployed, they will not face a frozen opponent; they will face an
 adversary (or a defensive stack) that adapts. Red-teaming reports that
 score a model on a fixed prompt suite therefore measure a snapshot, not
@@ -15,7 +15,7 @@ the trajectory that arises when the defender patches, rotates credentials,
 or deploys deception after the first probe.
 
 Recent agentic-security work has documented prompt injection, tool
-misuse, memory poisoning and collusion~\cite{greshake2023not,debenedetti2024agentdojo,zhan2024injecagent,chen2024agentpoison,abdelnabi2024cooperation}.
+misuse, memory poisoning and collusion~\cite{greshake2023not,debenedetti2024agentdojo,zhan2024injecagent,chen2024agentpoison,motwani2024secret}.
 These results are essential, but they rarely let \emph{both} sides
 adapt over a long horizon. The question we study is therefore
 complementary to one-shot robustness testing:
@@ -31,12 +31,12 @@ history rather than as a property of an isolated agent:
 \begin{equation}
   \mathrm{Security}
   \;=\;
-  f\!\left(\mathcal{C},\, G,\, \mathcal{I},\, \alpha,\, H\right),
+  f\!\left(\mathcal{C},\, G,\, \mathcal{I},\, \alpha,\, \mathcal{H}\right),
   \label{eq:security-fn}
 \end{equation}
 where $\mathcal{C}$ denotes capabilities, $G$ objectives, $\mathcal{I}$
-the interaction structure, $\alpha$ the adaptation regime, and $H$ the
-accumulated experience. Second, we build an experimental platform and
+the interaction structure, $\alpha$ the adaptation regime, and $\mathcal{H}$
+the accumulated experience. Second, we build an experimental platform and
 use it to measure whether co-evolutionary phenomena appear already in
 the smallest scientifically meaningful setting: one attacker and one
 defender, repeated episodes, controlled adaptation levels.

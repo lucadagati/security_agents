@@ -8,6 +8,16 @@ the store; the defender wins by detecting, containing and recovering first.
 
 \input{figures/network}
 
+\paragraph{Objectives and observations.}
+The attacker objective is to exfiltrate from the data store at minimum cost;
+the defender objective is to detect, isolate and recover before exfiltration.
+Attackers observe known hosts (reachability, footholds, vulnerabilities),
+footholds, credentials and turn budget; they do not see defender actions or
+unprobed hosts. Defenders observe per-host suspicion, monitoring level,
+isolation state and alert history on monitored hosts; they do not see attacker
+intent or off-network activity. Both sides receive schema-validated action
+outcomes each turn.
+
 \paragraph{Tools and kill chain.}
 Agents interact through a fixed catalogue of structured offensive and
 defensive tools (reconnaissance through exfiltration; monitoring through
@@ -21,14 +31,66 @@ definitions and JSON schemas are maintained in the open-source artefact
 
 \paragraph{Partial observability and detection.}
 Attackers begin with no host knowledge; defenders observe suspicion only on
-monitored hosts. Noisy actions increase suspicion; detection fires with
-probability $1-e^{-\lambda \sigma}$. Suspicion and monitoring intensity decay
-each turn, which makes low-noise pauses after high-noise actions viable even
-when objectives never mention waiting (Section~\ref{sec:results-ladder}).
+monitored hosts. A noisy action on host $h$ adds to accumulated suspicion
+$\sigma_h$; after each turn an automatic detector fires with probability
+$1-e^{-\lambda \sigma_h}$ (we use $\lambda=0.12$ in all reported runs).
+Suspicion and monitoring intensity decay by factor $0.85$ per turn. The
+\texttt{wait} action adds no noise, so pauses after exploits let $\sigma_h$
+decay even though no objective rewards waiting. Table~\ref{tab:sim-params}
+lists the remaining simulator defaults.
+
+\begin{table}[!t]
+\caption{Simulator defaults (all reported runs unless noted).}
+\label{tab:sim-params}
+\centering
+\setlength{\tabcolsep}{4pt}
+\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Parameter} & \textbf{Value} \\
+\midrule
+Service hosts & 3 \\
+Vulnerabilities per host & 2 \\
+Detection rate $\lambda$ & $0.12$ \\
+Suspicion decay / turn & $0.85$ \\
+Turn budget (ladder / LLM) & $20$ / $18$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Tool costs and noise.}
+Table~\ref{tab:tool-costs} lists representative offensive tools; defensive
+tools follow the same pattern (monitor and investigate are low noise;
+isolate and decoy are high cost). Episode \emph{attacker\_cost} and
+\emph{defender\_cost} in the telemetry are cumulative tool costs plus
+detection penalties; \emph{detection\_cost} counts defender effort triggered
+by alerts. Detection timing follows the law in the previous paragraph on
+every turn after actions resolve; there is no separate ``scan phase''.
+
+\begin{table}[!t]
+\caption{Representative offensive tools (simulator).}
+\label{tab:tool-costs}
+\centering
+\setlength{\tabcolsep}{3pt}
+\footnotesize
+\begin{tabular}{@{}lrrl@{}}
+\toprule
+\textbf{Tool} & \textbf{Cost} & \textbf{Noise} & \textbf{Notes} \\
+\midrule
+\texttt{recon} & 1.0 & low & reveals reachable hosts \\
+\texttt{probe\_service} & 1.5 & medium & discovers vulns \\
+\texttt{exploit} & 3.0 & high & foothold; raises $\sigma_h$ \\
+\texttt{harvest\_creds} & 2.0 & medium & unlocks lateral paths \\
+\texttt{lateral\_move} & 2.0 & medium & deeper foothold \\
+\texttt{exfiltrate} & 3.0 & high & attack success if undetected \\
+\texttt{wait} & 0.1 & none & suspicion decays \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \paragraph{Backends and defaults.}
 All reported experiments use the in-memory simulator for reproducibility; an
 optional Kubernetes backend implements the same interface. Default instances
 use three service hosts, two vulnerabilities per host, twenty turns per
-episode, and no inter-agent communication unless noted in
-Table~\ref{tab:matrix}.
+episode, and no inter-agent communication unless noted in the extended experimental
+matrix (supplementary material).

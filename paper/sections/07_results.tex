@@ -1,52 +1,62 @@
 \section{Results}
 \label{sec:results}
 
-We report the heuristic adaptation ladder (H1, H2, H5; RQ0--RQ3, RQ5) and
-the language-model campaign (H4, H7) under the protocol of
-Section~\ref{sec:method}.
+We report the heuristic adaptation ladder (H1, H2; RQ0--RQ1, RQ3, RQ5) and
+the language-model campaign (H4, H7 exploratory) under the protocol of
+Section~\ref{sec:method}. RQ2/H5 (emergence vs.\ $B_i^{\mathrm{enc}}$) are not
+evaluated: pacing tags are declared in $B_A^{\mathrm{enc}}$ and produced by an
+explicit cooldown rule in the policy (Section~\ref{sec:method-policies}).
 
 \subsection{Heuristic adaptation ladder}
 \label{sec:results-ladder}
-Table~\ref{tab:ladder} and Fig.~\ref{fig:ladder} summarise the factorial
-over six seeds with forty episodes each. Static attackers are detected in
-$98.3{\pm}1.0\%$ of episodes with low ASR ($0.029$--$0.046$) regardless of
-defender adaptation. When the attacker adapts, mean DR falls to
-$0.558{\pm}0.047$ and ASR rises modestly to $0.067$--$0.071$; an adaptive
-defender does not further reduce DR against a static attacker (H1 supported
-on detection more than on success).
+Table~\ref{tab:ladder}, Fig.~\ref{fig:ladder} and Table~\ref{tab:cep-adj}
+summarise all nine one-versus-one cells ($3{\times}3$ attacker/defender
+adaptation levels) over six seeds with forty episodes each. Static attackers are
+detected in $98.3{\pm}1.0\%$ of episodes with low ASR ($0.029$--$0.046$)
+regardless of defender adaptation. H2 is \emph{not} supported on DR: static/static
+and static/adaptive both yield $\mathrm{DR}=0.983{\pm}0.010$ (paired
+$t_{5}=0.00$, $p=1.00$, $d=0.00$; Table~\ref{tab:stats-tests}). When the
+\emph{attacker} adapts (L1 or L2), mean DR falls to $0.554$--$0.562$ and ASR
+rises modestly to $0.067$--$0.092$. H1 is supported on detection: adaptive/static lowers DR by
+$0.425$ relative to static/static (paired diff.\ $=+0.425$ with static as minuend;
+$t_{5}=20.82$, $p<0.001$, $d=10.04$; Table~\ref{tab:stats-tests}).
 
-The dominant mechanism is stealth pacing: adaptive attackers insert
-low-noise pauses after noisy exploits so suspicion decays before the next
-probe, yielding emergence tags \emph{delayed attack} and \emph{strategic
-patience} (H5) despite objectives that mention only exfiltration and cost.
+The dominant evasion mechanism is programmed stealth pacing: adaptive attackers
+insert low-noise \texttt{wait} turns after noisy exploits so suspicion decays
+(Section~\ref{sec:method-policies}). This behaviour is declared in
+$B_A^{\mathrm{enc}}$ and implemented by the cooldown rule; we do not treat it
+as emergent.
 
-\input{figures/ladder_bars}
+\input{figures/ladder_heatmap}
 
-Persistent matchups are classified as arms races: late-episode signature
-change stays elevated (Fig.~\ref{fig:arms}). On a representative run, rolling
-DR falls while attacker stealth rises from $0.5$ to $0.9$
-(Fig.~\ref{fig:episode-dynamics}), consistent with H2. CEP peaks when both
-sides adapt ($0.454{\pm}0.021$ to $0.465{\pm}0.043$).
+\paragraph{Parameter dynamics (RQ5).}
+Table~\ref{tab:dynamics} reports \emph{parameter} dynamics classes based on
+stealth/vigilance only. Static/static controls are stable in all six seeds
+($6/6$); adaptive and persistent attacker cells are predominantly
+non-convergent ($5$--$6/6$ per cell). Full-signature labels (including action-mix
+features) mark almost every run as non-convergent and do not discriminate L0
+controls; we therefore do not use them for primary claims. Fig.~\ref{fig:arms}
+shows parameter change on one representative P/P run; Fig.~\ref{fig:episode-dynamics}
+plots rolling DR and attacker stealth on the same run.
 
 \input{figures/episode_dynamics}
 \input{figures/arms_race}
 
-\begin{table}[!t]
-\caption{Heuristic adaptation ladder (mean$\pm$95\% CI, six seeds, 40 episodes).}
-\label{tab:ladder}
-\centering
-\begin{tabular}{@{}lccc@{}}
-\toprule
-\textbf{Matchup} & \textbf{ASR} & \textbf{DR} & \textbf{CEP} \\
-\midrule
-Static / static         & $0.046{\pm}0.015$ & $0.983{\pm}0.010$ & $0.416{\pm}0.030$ \\
-Static / adaptive       & $0.029{\pm}0.015$ & $0.983{\pm}0.010$ & $0.445{\pm}0.014$ \\
-Adaptive / static       & $0.067{\pm}0.010$ & $0.558{\pm}0.047$ & $0.391{\pm}0.030$ \\
-Adaptive / adaptive     & $0.071{\pm}0.023$ & $0.558{\pm}0.047$ & $0.454{\pm}0.021$ \\
-Persistent / persistent & $0.071{\pm}0.034$ & $0.562{\pm}0.047$ & $0.465{\pm}0.043$ \\
-\bottomrule
-\end{tabular}
-\end{table}
+\input{figures/generated/ladder_table}
+\input{figures/generated/cep_adj_table}
+\input{figures/generated/dynamics_table}
+
+CEP is highest when both sides adapt at L2 ($0.465{\pm}0.043$ for P/P). Baseline-adjusted
+$\mathrm{CEP}_{\mathrm{adj}}$ (Eq.~\eqref{eq:cep-adj}) removes same-seed
+static/static ambient variability; differences versus P/P are modest
+($\mathrm{CEP}_{\mathrm{adj}}=0.049{\pm}0.060$, paired $t_{5}=-1.61$, $p=0.168$,
+$d=-0.93$; Table~\ref{tab:stats-tests}).
+
+Asymmetric L2 cells isolate which side drives outcomes: P/S matches adaptive
+attackers on DR ($0.554{\pm}0.048$), while S/P remains fully detected
+($0.983{\pm}0.010$).
+
+\input{figures/generated/stats_tests}
 
 \subsection{Language-model evaluation}
 \label{sec:results-llm}
@@ -54,38 +64,19 @@ Pure LLM policies frequently fail to complete the offensive chain; we
 therefore report hybrid B3--B5 cells (Section~\ref{sec:method-policies}).
 
 Table~\ref{tab:llm} and Fig.~\ref{fig:hybrid-asr} summarise six seeds with
-thirty episodes each. Only episodic hybrid B4 reaches clearly positive mean
-ASR ($0.139{\pm}0.052$) with non-trivial CEP ($0.247{\pm}0.021$). Static
-hybrid B3 acts but never exfiltrates ($\mathrm{ASR}=0$,
-$\mathrm{DR}=0.939{\pm}0.020$); persistent B5 stays near the floor
-($\mathrm{ASR}=0.022{\pm}0.014$). H4 is not supported: longer memory does
-not beat episodic memory.
+thirty episodes each. B4 reaches the highest mean ASR ($0.211{\pm}0.040$);
+B5 remains low ($0.044{\pm}0.028$, CI overlaps zero only at the lower bound).
+B3 never exfiltrates ($\mathrm{ASR}=0$). H4 is not supported. DR is high for
+B3 and B4 ($0.939$ and $0.856$) for distinct reasons (noisy probes vs.\ longer
+chains). B4 exceeds B3 on ASR (paired $t_{5}=-10.30$, $p<0.001$, Table~\ref{tab:stats-tests}).
+Attacker gate fractions: B3=$0.62{\pm}0.02$, B4=$0.52{\pm}0.02$, B5=$0.67{\pm}0.01$
+(Section~\ref{sec:method-policies}).
 
 \input{figures/hybrid_memory_bars}
-
-Supplementary conditions (Table~\ref{tab:llm_ablation}) show non-monotonic
-model scale (H7), high ASR ($\approx0.35$) when a heuristic attacker faces a
-hybrid defender, and near-zero ASR in the reverse matchup, indicating that
-chain completion dominates nominal capability. Extended horizons and a small
-$3{\times}3$ cell do not replicate the ladder's co-evolutionary effects.
+\input{figures/generated/llm_table}
 
 \begin{table}[!t]
-\caption{Hybrid LLM baselines B3--B5 (mean$\pm$95\% CI, six seeds, 30 episodes).}
-\label{tab:llm}
-\centering
-\begin{tabular}{@{}lccc@{}}
-\toprule
-\textbf{Cell} & \textbf{ASR} & \textbf{DR} & \textbf{CEP} \\
-\midrule
-B3 hybrid static      & $0.000{\pm}0.000$ & $0.939{\pm}0.020$ & $0.121{\pm}0.012$ \\
-B4 hybrid episodic    & $0.139{\pm}0.052$ & $0.467{\pm}0.070$ & $0.247{\pm}0.021$ \\
-B5 hybrid persistent  & $0.022{\pm}0.014$ & $0.467{\pm}0.070$ & $0.128{\pm}0.010$ \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!t]
-\caption{Supplementary LLM conditions (mean ASR/DR over available seeds).}
+\caption{Supplementary LLM conditions (mean ASR/DR over available seeds; exploratory).}
 \label{tab:llm_ablation}
 \centering
 \setlength{\tabcolsep}{4pt}
@@ -94,15 +85,15 @@ B5 hybrid persistent  & $0.022{\pm}0.014$ & $0.467{\pm}0.070$ & $0.128{\pm}0.010
 \textbf{Condition} & \textbf{ASR} & \textbf{DR} & \textbf{$n$} \\
 \midrule
 Pure LLM B5 persistent           & $0.050$ & $0.500$ & 3 \\
-Hybrid B5, smaller open model  & $0.067$ & $0.517$ & 3 \\
-Hybrid B5, larger coder model  & $0.000$ & $0.500$ & 3 \\
+Hybrid B5, 8B open-weight      & $0.067$ & $0.517$ & 3 \\
+Hybrid B5, 30B coder           & $0.000$ & $0.500$ & 3 \\
 Heuristic att.\ / hybrid def.  & $0.347$ & $0.486$ & 3 \\
 Hybrid att.\ / heuristic def.  & $0.014$ & $0.528$ & 3 \\
 Hybrid B5, extended horizon    & $0.025$ & $0.442$ & 3 \\
-Hybrid episodic $3{\times}3$   & $0.000$ & $0.917$ & 2 \\
+Hybrid episodic multi-agent    & $0.000$ & $0.917$ & 2 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 Population scaling (RQ4), ESR (H3) and coalition dynamics (H6) remain for
-E3--E8 (Table~\ref{tab:matrix}).
+the extended matrix (supplementary material).

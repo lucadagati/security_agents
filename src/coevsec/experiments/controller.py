@@ -23,9 +23,13 @@ from coevsec.metrics import (
     behavioral_novelty,
     coalition_rate,
     coevolutionary_pressure,
+    coevolutionary_pressure_attacker,
+    coevolutionary_pressure_defender,
+    cross_lagged_correlation,
     deception_rate,
     detection_rate,
     emergent_security_risk,
+    episode_shuffle_null,
     mean_cost,
     recovery_time,
     strategy_diversity,
@@ -181,6 +185,12 @@ class ExperimentController:
 
             summary["attacker_strategy"] = att_sig
             summary["defender_strategy"] = def_sig
+            hybrid_stats = {}
+            for a in agents:
+                if hasattr(a.policy, "gate_stats"):
+                    hybrid_stats[a.agent_id] = a.policy.gate_stats()
+            if hybrid_stats:
+                summary["hybrid_gate_stats"] = hybrid_stats
             result.episodes.append(summary)
             if writer is not None:
                 writer.log_episode(summary)
@@ -213,11 +223,15 @@ class ExperimentController:
 
     def _aggregate(self, r: RunResult) -> dict[str, Any]:
         eps = r.episodes
-        return {
+        xl = cross_lagged_correlation(r.attacker_sigs, r.defender_sigs)
+        out = {
             "name": self.cfg.name,
             "episodes": len(eps),
             "attack_success_rate": attack_success_rate(eps),
             "detection_rate": detection_rate(eps),
+            "attack_success_count": sum(1 for e in eps if e.get("attack_success")),
+            "detection_count": sum(1 for e in eps if e.get("detected")),
+            "attempted_attack_count": sum(1 for e in eps if e.get("attempted_attack", True)),
             "attacker_cost": mean_cost(eps, "attacker_cost"),
             "defender_cost": mean_cost(eps, "defender_cost"),
             "detection_cost": mean_cost(eps, "detection_cost"),
@@ -228,10 +242,48 @@ class ExperimentController:
             "defender_strategy_diversity": strategy_diversity(r.defender_sigs),
             "behavioral_novelty": behavioral_novelty(r.per_episode_behaviours),
             "coevolutionary_pressure": coevolutionary_pressure(r.attacker_sigs, r.defender_sigs),
+            "cep_attacker": coevolutionary_pressure_attacker(r.attacker_sigs),
+            "cep_defender": coevolutionary_pressure_defender(r.defender_sigs),
+            "cep_shuffle_null": episode_shuffle_null(r.attacker_sigs, r.defender_sigs),
+            "cross_lagged_def_to_att": xl["def_to_att"],
+            "cross_lagged_att_to_def": xl["att_to_def"],
             "mean_graph_density": (
                 sum(e.get("graph_density", 0.0) for e in eps) / len(eps) if eps else 0.0
             ),
         }
+        gate = _summarize_hybrid_gate_stats(eps)
+        if gate:
+            out["hybrid_gate_stats"] = gate
+        return out
+
+
+def _summarize_hybrid_gate_stats(episodes: list[dict]) -> dict[str, float]:
+    """Sum per-episode hybrid gate counters (attacker side) across a run."""
+    llm_steps = heur_steps = repairs = illegal = stall = progress = 0.0
+    found = False
+    for ep in episodes:
+        for agent_id, stats in (ep.get("hybrid_gate_stats") or {}).items():
+            if "attacker" not in agent_id:
+                continue
+            found = True
+            llm_steps += float(stats.get("llm_steps", 0.0))
+            heur_steps += float(stats.get("heuristic_steps", stats.get("gate_interventions", 0.0)))
+            repairs += float(stats.get("llm_repairs", 0.0))
+            illegal += float(stats.get("gate_illegal", 0.0))
+            stall += float(stats.get("gate_stall", 0.0))
+            progress += float(stats.get("gate_progress", 0.0))
+    if not found:
+        return {}
+    total = llm_steps + heur_steps
+    return {
+        "attacker_llm_steps": llm_steps,
+        "attacker_heuristic_steps": heur_steps,
+        "attacker_gate_frac": heur_steps / total if total else 0.0,
+        "attacker_llm_repairs": repairs,
+        "attacker_gate_illegal": illegal,
+        "attacker_gate_stall": stall,
+        "attacker_gate_progress": progress,
+    }
 
 
 def _category(env, tool_name: str) -> str:

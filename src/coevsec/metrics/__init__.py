@@ -14,7 +14,11 @@ from coevsec.metrics.coevolution import (
     strategy_diversity,
     behavioral_novelty,
     coevolutionary_pressure,
+    coevolutionary_pressure_attacker,
+    coevolutionary_pressure_defender,
+    cross_lagged_correlation,
     emergent_security_risk,
+    episode_shuffle_null,
 )
 
 __all__ = [
@@ -29,5 +33,9 @@ __all__ = [
     "strategy_diversity",
     "behavioral_novelty",
     "coevolutionary_pressure",
+    "coevolutionary_pressure_attacker",
+    "coevolutionary_pressure_defender",
+    "cross_lagged_correlation",
+    "episode_shuffle_null",
     "emergent_security_risk",
 ]

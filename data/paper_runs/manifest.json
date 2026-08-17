@@ -1,0 +1,332 @@
+{
+  "commit": "d931a07849aa2f888567bacdae05b21f4eb123d9",
+  "ladder_ci": "data/paper_runs/ladder_ci.json",
+  "campaign_report": "data/paper_runs/campaign_final_report.json",
+  "runs": [
+    {
+      "run_dir": "runs/ci/ci_static_static_s100_63d15d955115ea6e",
+      "config.json": "runs/ci/ci_static_static_s100_63d15d955115ea6e/config.json",
+      "episodes.jsonl": "runs/ci/ci_static_static_s100_63d15d955115ea6e/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_static_static_s100_63d15d955115ea6e/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_static_static_s110_08dfd959ac1ee12a",
+      "config.json": "runs/ci/ci_static_static_s110_08dfd959ac1ee12a/config.json",
+      "episodes.jsonl": "runs/ci/ci_static_static_s110_08dfd959ac1ee12a/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_static_static_s110_08dfd959ac1ee12a/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_static_static_s120_9af706c89fb72cc5",
+      "config.json": "runs/ci/ci_static_static_s120_9af706c89fb72cc5/config.json",
+      "episodes.jsonl": "runs/ci/ci_static_static_s120_9af706c89fb72cc5/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_static_static_s120_9af706c89fb72cc5/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_static_static_s130_eb111771ed3023e9",
+      "config.json": "runs/ci/ci_static_static_s130_eb111771ed3023e9/config.json",
+      "episodes.jsonl": "runs/ci/ci_static_static_s130_eb111771ed3023e9/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_static_static_s130_eb111771ed3023e9/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_static_static_s140_c26b4995ec819e61",
+      "config.json": "runs/ci/ci_static_static_s140_c26b4995ec819e61/config.json",
+      "episodes.jsonl": "runs/ci/ci_static_static_s140_c26b4995ec819e61/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_static_static_s140_c26b4995ec819e61/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_static_static_s150_fc5fc4df2aa76df8",
+      "config.json": "runs/ci/ci_static_static_s150_fc5fc4df2aa76df8/config.json",
+      "episodes.jsonl": "runs/ci/ci_static_static_s150_fc5fc4df2aa76df8/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_static_static_s150_fc5fc4df2aa76df8/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_static_adaptive_s100_c20bc426d61197de",
+      "config.json": "runs/ci/ci_static_adaptive_s100_c20bc426d61197de/config.json",
+      "episodes.jsonl": "runs/ci/ci_static_adaptive_s100_c20bc426d61197de/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_static_adaptive_s100_c20bc426d61197de/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_static_adaptive_s110_0a6c7404a9662fc4",
+      "config.json": "runs/ci/ci_static_adaptive_s110_0a6c7404a9662fc4/config.json",
+      "episodes.jsonl": "runs/ci/ci_static_adaptive_s110_0a6c7404a9662fc4/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_static_adaptive_s110_0a6c7404a9662fc4/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_static_adaptive_s120_ea04b9c6c09f2b30",
+      "config.json": "runs/ci/ci_static_adaptive_s120_ea04b9c6c09f2b30/config.json",
+      "episodes.jsonl": "runs/ci/ci_static_adaptive_s120_ea04b9c6c09f2b30/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_static_adaptive_s120_ea04b9c6c09f2b30/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_static_adaptive_s130_f4320991c920e08c",
+      "config.json": "runs/ci/ci_static_adaptive_s130_f4320991c920e08c/config.json",
+      "episodes.jsonl": "runs/ci/ci_static_adaptive_s130_f4320991c920e08c/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_static_adaptive_s130_f4320991c920e08c/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_static_adaptive_s140_9cdef6be96dfb98f",
+      "config.json": "runs/ci/ci_static_adaptive_s140_9cdef6be96dfb98f/config.json",
+      "episodes.jsonl": "runs/ci/ci_static_adaptive_s140_9cdef6be96dfb98f/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_static_adaptive_s140_9cdef6be96dfb98f/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_static_adaptive_s150_6df6ad3160fefc05",
+      "config.json": "runs/ci/ci_static_adaptive_s150_6df6ad3160fefc05/config.json",
+      "episodes.jsonl": "runs/ci/ci_static_adaptive_s150_6df6ad3160fefc05/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_static_adaptive_s150_6df6ad3160fefc05/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_adaptive_static_s100_1b8cb23fec93088e",
+      "config.json": "runs/ci/ci_adaptive_static_s100_1b8cb23fec93088e/config.json",
+      "episodes.jsonl": "runs/ci/ci_adaptive_static_s100_1b8cb23fec93088e/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_adaptive_static_s100_1b8cb23fec93088e/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_adaptive_static_s110_4df9d8080152f92e",
+      "config.json": "runs/ci/ci_adaptive_static_s110_4df9d8080152f92e/config.json",
+      "episodes.jsonl": "runs/ci/ci_adaptive_static_s110_4df9d8080152f92e/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_adaptive_static_s110_4df9d8080152f92e/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_adaptive_static_s120_d97780bf30088332",
+      "config.json": "runs/ci/ci_adaptive_static_s120_d97780bf30088332/config.json",
+      "episodes.jsonl": "runs/ci/ci_adaptive_static_s120_d97780bf30088332/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_adaptive_static_s120_d97780bf30088332/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_adaptive_static_s130_4fcba0def2df48b4",
+      "config.json": "runs/ci/ci_adaptive_static_s130_4fcba0def2df48b4/config.json",
+      "episodes.jsonl": "runs/ci/ci_adaptive_static_s130_4fcba0def2df48b4/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_adaptive_static_s130_4fcba0def2df48b4/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_adaptive_static_s140_c366d795e534b554",
+      "config.json": "runs/ci/ci_adaptive_static_s140_c366d795e534b554/config.json",
+      "episodes.jsonl": "runs/ci/ci_adaptive_static_s140_c366d795e534b554/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_adaptive_static_s140_c366d795e534b554/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_adaptive_static_s150_ad057fe166b0a0cc",
+      "config.json": "runs/ci/ci_adaptive_static_s150_ad057fe166b0a0cc/config.json",
+      "episodes.jsonl": "runs/ci/ci_adaptive_static_s150_ad057fe166b0a0cc/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_adaptive_static_s150_ad057fe166b0a0cc/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_adaptive_adaptive_s100_a89a594b18fff4a5",
+      "config.json": "runs/ci/ci_adaptive_adaptive_s100_a89a594b18fff4a5/config.json",
+      "episodes.jsonl": "runs/ci/ci_adaptive_adaptive_s100_a89a594b18fff4a5/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_adaptive_adaptive_s100_a89a594b18fff4a5/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_adaptive_adaptive_s110_2c729472a2e42502",
+      "config.json": "runs/ci/ci_adaptive_adaptive_s110_2c729472a2e42502/config.json",
+      "episodes.jsonl": "runs/ci/ci_adaptive_adaptive_s110_2c729472a2e42502/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_adaptive_adaptive_s110_2c729472a2e42502/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_adaptive_adaptive_s120_f9ee57131ac1f0d9",
+      "config.json": "runs/ci/ci_adaptive_adaptive_s120_f9ee57131ac1f0d9/config.json",
+      "episodes.jsonl": "runs/ci/ci_adaptive_adaptive_s120_f9ee57131ac1f0d9/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_adaptive_adaptive_s120_f9ee57131ac1f0d9/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_adaptive_adaptive_s130_5a4571b76999f6cd",
+      "config.json": "runs/ci/ci_adaptive_adaptive_s130_5a4571b76999f6cd/config.json",
+      "episodes.jsonl": "runs/ci/ci_adaptive_adaptive_s130_5a4571b76999f6cd/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_adaptive_adaptive_s130_5a4571b76999f6cd/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_adaptive_adaptive_s140_793932d7825b265a",
+      "config.json": "runs/ci/ci_adaptive_adaptive_s140_793932d7825b265a/config.json",
+      "episodes.jsonl": "runs/ci/ci_adaptive_adaptive_s140_793932d7825b265a/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_adaptive_adaptive_s140_793932d7825b265a/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_adaptive_adaptive_s150_f77b5d1b475dcb38",
+      "config.json": "runs/ci/ci_adaptive_adaptive_s150_f77b5d1b475dcb38/config.json",
+      "episodes.jsonl": "runs/ci/ci_adaptive_adaptive_s150_f77b5d1b475dcb38/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_adaptive_adaptive_s150_f77b5d1b475dcb38/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_persistent_persistent_s100_f572a71987cef241",
+      "config.json": "runs/ci/ci_persistent_persistent_s100_f572a71987cef241/config.json",
+      "episodes.jsonl": "runs/ci/ci_persistent_persistent_s100_f572a71987cef241/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_persistent_persistent_s100_f572a71987cef241/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_persistent_persistent_s110_c83d1792eafc95d1",
+      "config.json": "runs/ci/ci_persistent_persistent_s110_c83d1792eafc95d1/config.json",
+      "episodes.jsonl": "runs/ci/ci_persistent_persistent_s110_c83d1792eafc95d1/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_persistent_persistent_s110_c83d1792eafc95d1/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_persistent_persistent_s120_361a24fb48d14229",
+      "config.json": "runs/ci/ci_persistent_persistent_s120_361a24fb48d14229/config.json",
+      "episodes.jsonl": "runs/ci/ci_persistent_persistent_s120_361a24fb48d14229/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_persistent_persistent_s120_361a24fb48d14229/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_persistent_persistent_s130_213b931007761cdc",
+      "config.json": "runs/ci/ci_persistent_persistent_s130_213b931007761cdc/config.json",
+      "episodes.jsonl": "runs/ci/ci_persistent_persistent_s130_213b931007761cdc/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_persistent_persistent_s130_213b931007761cdc/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_persistent_persistent_s140_737f0862bbbd57a6",
+      "config.json": "runs/ci/ci_persistent_persistent_s140_737f0862bbbd57a6/config.json",
+      "episodes.jsonl": "runs/ci/ci_persistent_persistent_s140_737f0862bbbd57a6/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_persistent_persistent_s140_737f0862bbbd57a6/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_persistent_persistent_s150_122060be758ce13a",
+      "config.json": "runs/ci/ci_persistent_persistent_s150_122060be758ce13a/config.json",
+      "episodes.jsonl": "runs/ci/ci_persistent_persistent_s150_122060be758ce13a/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_persistent_persistent_s150_122060be758ce13a/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_persistent_static_s100_23d930832beb2551",
+      "config.json": "runs/ci/ci_persistent_static_s100_23d930832beb2551/config.json",
+      "episodes.jsonl": "runs/ci/ci_persistent_static_s100_23d930832beb2551/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_persistent_static_s100_23d930832beb2551/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_persistent_static_s110_cebea02cb4ec869b",
+      "config.json": "runs/ci/ci_persistent_static_s110_cebea02cb4ec869b/config.json",
+      "episodes.jsonl": "runs/ci/ci_persistent_static_s110_cebea02cb4ec869b/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_persistent_static_s110_cebea02cb4ec869b/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_persistent_static_s120_841f2caed9b90bff",
+      "config.json": "runs/ci/ci_persistent_static_s120_841f2caed9b90bff/config.json",
+      "episodes.jsonl": "runs/ci/ci_persistent_static_s120_841f2caed9b90bff/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_persistent_static_s120_841f2caed9b90bff/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_persistent_static_s130_445de077b3b455d2",
+      "config.json": "runs/ci/ci_persistent_static_s130_445de077b3b455d2/config.json",
+      "episodes.jsonl": "runs/ci/ci_persistent_static_s130_445de077b3b455d2/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_persistent_static_s130_445de077b3b455d2/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_persistent_static_s140_49fd64c1b0c7acb5",
+      "config.json": "runs/ci/ci_persistent_static_s140_49fd64c1b0c7acb5/config.json",
+      "episodes.jsonl": "runs/ci/ci_persistent_static_s140_49fd64c1b0c7acb5/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_persistent_static_s140_49fd64c1b0c7acb5/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_persistent_static_s150_649f58a21b596c66",
+      "config.json": "runs/ci/ci_persistent_static_s150_649f58a21b596c66/config.json",
+      "episodes.jsonl": "runs/ci/ci_persistent_static_s150_649f58a21b596c66/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_persistent_static_s150_649f58a21b596c66/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_static_persistent_s100_c6505fa490d8f1cf",
+      "config.json": "runs/ci/ci_static_persistent_s100_c6505fa490d8f1cf/config.json",
+      "episodes.jsonl": "runs/ci/ci_static_persistent_s100_c6505fa490d8f1cf/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_static_persistent_s100_c6505fa490d8f1cf/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_static_persistent_s110_7bc566ca61846365",
+      "config.json": "runs/ci/ci_static_persistent_s110_7bc566ca61846365/config.json",
+      "episodes.jsonl": "runs/ci/ci_static_persistent_s110_7bc566ca61846365/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_static_persistent_s110_7bc566ca61846365/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_static_persistent_s120_8622702564fe2431",
+      "config.json": "runs/ci/ci_static_persistent_s120_8622702564fe2431/config.json",
+      "episodes.jsonl": "runs/ci/ci_static_persistent_s120_8622702564fe2431/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_static_persistent_s120_8622702564fe2431/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_static_persistent_s130_d551b263c656addf",
+      "config.json": "runs/ci/ci_static_persistent_s130_d551b263c656addf/config.json",
+      "episodes.jsonl": "runs/ci/ci_static_persistent_s130_d551b263c656addf/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_static_persistent_s130_d551b263c656addf/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_static_persistent_s140_4fa57e59ce343a97",
+      "config.json": "runs/ci/ci_static_persistent_s140_4fa57e59ce343a97/config.json",
+      "episodes.jsonl": "runs/ci/ci_static_persistent_s140_4fa57e59ce343a97/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_static_persistent_s140_4fa57e59ce343a97/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_static_persistent_s150_ce2bd784dc375227",
+      "config.json": "runs/ci/ci_static_persistent_s150_ce2bd784dc375227/config.json",
+      "episodes.jsonl": "runs/ci/ci_static_persistent_s150_ce2bd784dc375227/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_static_persistent_s150_ce2bd784dc375227/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_persistent_adaptive_s100_71575df86f256d29",
+      "config.json": "runs/ci/ci_persistent_adaptive_s100_71575df86f256d29/config.json",
+      "episodes.jsonl": "runs/ci/ci_persistent_adaptive_s100_71575df86f256d29/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_persistent_adaptive_s100_71575df86f256d29/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_persistent_adaptive_s110_eae9709579614f5b",
+      "config.json": "runs/ci/ci_persistent_adaptive_s110_eae9709579614f5b/config.json",
+      "episodes.jsonl": "runs/ci/ci_persistent_adaptive_s110_eae9709579614f5b/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_persistent_adaptive_s110_eae9709579614f5b/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_persistent_adaptive_s120_552264840a0c00a9",
+      "config.json": "runs/ci/ci_persistent_adaptive_s120_552264840a0c00a9/config.json",
+      "episodes.jsonl": "runs/ci/ci_persistent_adaptive_s120_552264840a0c00a9/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_persistent_adaptive_s120_552264840a0c00a9/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_persistent_adaptive_s130_2a2d4cea3748f653",
+      "config.json": "runs/ci/ci_persistent_adaptive_s130_2a2d4cea3748f653/config.json",
+      "episodes.jsonl": "runs/ci/ci_persistent_adaptive_s130_2a2d4cea3748f653/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_persistent_adaptive_s130_2a2d4cea3748f653/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_persistent_adaptive_s140_4032426a08701fce",
+      "config.json": "runs/ci/ci_persistent_adaptive_s140_4032426a08701fce/config.json",
+      "episodes.jsonl": "runs/ci/ci_persistent_adaptive_s140_4032426a08701fce/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_persistent_adaptive_s140_4032426a08701fce/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_persistent_adaptive_s150_f96b20ced4bf4021",
+      "config.json": "runs/ci/ci_persistent_adaptive_s150_f96b20ced4bf4021/config.json",
+      "episodes.jsonl": "runs/ci/ci_persistent_adaptive_s150_f96b20ced4bf4021/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_persistent_adaptive_s150_f96b20ced4bf4021/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_adaptive_persistent_s100_a43e56c31af83876",
+      "config.json": "runs/ci/ci_adaptive_persistent_s100_a43e56c31af83876/config.json",
+      "episodes.jsonl": "runs/ci/ci_adaptive_persistent_s100_a43e56c31af83876/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_adaptive_persistent_s100_a43e56c31af83876/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_adaptive_persistent_s110_ff9d7555503c898d",
+      "config.json": "runs/ci/ci_adaptive_persistent_s110_ff9d7555503c898d/config.json",
+      "episodes.jsonl": "runs/ci/ci_adaptive_persistent_s110_ff9d7555503c898d/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_adaptive_persistent_s110_ff9d7555503c898d/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_adaptive_persistent_s120_6828f68008f11ba7",
+      "config.json": "runs/ci/ci_adaptive_persistent_s120_6828f68008f11ba7/config.json",
+      "episodes.jsonl": "runs/ci/ci_adaptive_persistent_s120_6828f68008f11ba7/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_adaptive_persistent_s120_6828f68008f11ba7/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_adaptive_persistent_s130_6eeeae338e9456dd",
+      "config.json": "runs/ci/ci_adaptive_persistent_s130_6eeeae338e9456dd/config.json",
+      "episodes.jsonl": "runs/ci/ci_adaptive_persistent_s130_6eeeae338e9456dd/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_adaptive_persistent_s130_6eeeae338e9456dd/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_adaptive_persistent_s140_0fb298629b42bf4a",
+      "config.json": "runs/ci/ci_adaptive_persistent_s140_0fb298629b42bf4a/config.json",
+      "episodes.jsonl": "runs/ci/ci_adaptive_persistent_s140_0fb298629b42bf4a/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_adaptive_persistent_s140_0fb298629b42bf4a/analysis/report.json"
+    },
+    {
+      "run_dir": "runs/ci/ci_adaptive_persistent_s150_310881215924bf9f",
+      "config.json": "runs/ci/ci_adaptive_persistent_s150_310881215924bf9f/config.json",
+      "episodes.jsonl": "runs/ci/ci_adaptive_persistent_s150_310881215924bf9f/episodes.jsonl",
+      "analysis_report": "runs/ci/ci_adaptive_persistent_s150_310881215924bf9f/analysis/report.json"
+    }
+  ],
+  "paper_stats": "data/paper_runs/paper_stats.json"
+}

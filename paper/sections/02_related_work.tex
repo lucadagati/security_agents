@@ -1,97 +1,130 @@
 \section{Background and Related Work}
 \label{sec:related}
 
-Prior work touches co-evolutionary security from several directions, but
-rarely combines all of the following: autonomous agents on both sides, a
-cybersecurity environment, repeated episodes, explicit adaptation levels,
-and reproducible measurement of strategy change. We review five strands and
- summarise the gap in Table~\ref{tab:gap}.
+This work lies at the intersection of agentic language models, agent
+security, autonomous cyber defence, multi-agent learning and competitive
+co-evolution. Importantly, prior research has already trained or evolved
+attackers and defenders together. Our claim is therefore not that
+co-evolution in cybersecurity is new, but that its evaluation should make
+both sides' adaptation and memory regimes explicit and should measure the
+resulting strategy dynamics over repeated encounters. Table~\ref{tab:gap}
+summarises this positioning.
 
-\paragraph{LLM agents and tool use.}
-ReAct-style loops couple reasoning with acting through external
-tools~\cite{yao2023react,schick2023toolformer}. Multi-agent systems such as
-AutoGen and generative-agent societies show that language-model instances
-can plan, delegate and persist memory~\cite{wu2023autogen,park2023generative,xi2023rise,shinn2023reflexion}.
-These architectures increase the attack surface (tools, memory, messages)
-but do not, by themselves, define a co-evolutionary evaluation protocol.
-We adopt a deliberately simple decision loop so that differences across
-runs can be traced to adaptation level rather than planner design. Planner
-complexity (multi-agent debate, retrieval, code synthesis) is orthogonal
-to the question we ask: whether \emph{memory regime} and \emph{opponent
-adaptation} change measurable security outcomes when the tool catalogue
-and detection physics are held fixed.
+\paragraph{Language-model agents, tools and memory.}
+ReAct and Toolformer established influential patterns for coupling language
+models to external actions and APIs~\cite{yao2023react,schick2023toolformer}.
+Reflexion showed that linguistic feedback stored across trials can alter later
+decisions without updating model weights~\cite{shinn2023reflexion}. Generative
+Agents, CAMEL and AutoGen extended this design space to persistent memory,
+role-conditioned interaction and multi-agent orchestration
+~\cite{park2023generative,li2023camel,wu2023autogen}. Surveys and broad
+benchmarks organise these capabilities and expose persistent weaknesses in
+long-horizon decision making~\cite{xi2025rise,liu2024agentbench}. This line of
+work supplies the architectural ingredients used here, but generally measures
+task completion while the environment and other agents follow a fixed
+protocol. We instead treat memory regime and opponent adaptation as
+independent experimental factors.
 
-\paragraph{Security of agentic systems.}
-Indirect prompt injection~\cite{greshake2023not}, jailbreaks~\cite{zou2023universal}
-and systematic red teaming~\cite{perez2022red} show that models can be
-steered into unintended actions. Agent-specific benchmarks (AgentDojo,
-InjecAgent, AgentPoison) extend this to tool misuse, memory poisoning and
-environment injection~\cite{debenedetti2024agentdojo,zhan2024injecagent,chen2024agentpoison}.
-Multi-agent studies document collusion and steganographic
-coordination~\cite{abdelnabi2024cooperation}. The typical evaluation
-freezes the defender or truncates the horizon; it does not measure what
-happens when a defensive agent also remembers and adapts.
+\paragraph{Security evaluation of agentic systems.}
+Model-level red teaming and transferable jailbreaks demonstrate failures of
+aligned language models~\cite{perez2022red,zou2023universal}. Indirect prompt
+injection and its formal benchmarking show how untrusted context can redirect
+tool-integrated applications~\cite{greshake2023not,liu2024formalizing}.
+ToolEmu evaluates consequential actions in an LM-emulated sandbox
+~\cite{ruan2024toolemu}, while AgentDojo, InjecAgent and AgentPoison cover tool
+misuse, environment injection and poisoning of long-term memory or retrieval
+stores~\cite{debenedetti2024agentdojo,zhan2024injecagent,chen2024agentpoison}.
+Multi-agent work additionally studies adversarial negotiation and covert
+steganographic collusion~\cite{abdelnabi2024cooperation,motwani2024secret}.
+These studies greatly expand the relevant attack surface. Even when attacks
+are generated adaptively, however, the principal benchmark unit is normally a
+task or attack--defence cell rather than a long sequence in which both roles
+retain experience and change policy in response to one another.
 
-\paragraph{Autonomous cyber defence and cyber ranges.}
-CybORG/CAGE, CyberBattleSim and related gyms let learning agents operate
-on emulated networks~\cite{standen2021cyborg,microsoft2021cyberbattlesim,molina2021network}.
-MITRE ATT\&CK supplies vocabulary for adversary
-behaviour~\cite{strom2018attck}. These platforms emphasise high-fidelity
-environments and defender training against scripted or slowly varying
-attackers. Co-evolution of \emph{both} sides under declared memory regimes,
-with explicit emergence criteria, is outside their usual experimental
-design. Our simulator backend is intentionally smaller in topology so that
-factorial sweeps over adaptation remain tractable; the optional Kubernetes
-path preserves interface compatibility for later fidelity studies.
+\paragraph{Autonomous cyber agents and ranges.}
+CybORG combines simulated and emulated cyber environments behind a common
+agent interface~\cite{standen2021cyborg}; CyberBattleSim has also been extended
+to learn red and blue policies jointly~\cite{kunz2022multiagent}. NASim frames
+autonomous penetration testing as sequential decision making
+~\cite{schwartz2019autonomous}, whereas Network Defense Is Not a Game argues
+that evaluation should span distributions of drifting network conditions
+~\cite{molina2021network}. Two-player, knowledge-guided reinforcement learning
+further demonstrates simultaneous attacker--defender improvement in a cyber
+simulator~\cite{piplai2022knowledge}. MITRE ATT\&CK supplies the empirical
+vocabulary used to describe adversary tactics and techniques
+~\cite{strom2020attck}. These platforms and algorithms are the closest
+environment-side foundations for our work. Their usual endpoints are return,
+success, convergence or transfer of a learned policy; cross-episode memory
+regimes and trajectory-level measures of reciprocal strategy change are not
+their primary experimental variables.
+
+\paragraph{Cybersecurity co-evolution.}
+There is a direct lineage of competitive evolutionary cybersecurity research.
+CANDLES co-evolves rule-based attacker and defender populations
+~\cite{rush2015candles}; later work co-evolves network segmentation and attack
+strategies~\cite{hemberg2018adversarial}. Turner et al. compare multi-agent
+reinforcement learning and co-evolution for penetration testing
+~\cite{turner2022analyzing}, and Shashkov et al. compare reinforcement
+learning, evolutionary strategies and tree search under simultaneous
+attacker--defender training~\cite{shashkov2023adversarial}. Most recently,
+Hemberg et al. study one-sided versus two-sided evolution of cyber-agent teams
+and include an LLM-supported mutation operator~\cite{hemberg2025evolutionary}.
+These papers are our closest methodological predecessors. They optimise
+parameterised controllers or populations; our complementary focus is on
+behavioural adaptation induced by declared memory regimes, including cases in
+which the LLM itself is the acting policy, and on longitudinal indicators such
+as strategy signatures and co-evolutionary pressure.
+
+The broader conceptual basis comes from competitive co-evolution and
+evolutionary games. Hillis demonstrated that co-evolving adversaries can
+improve search, and Rosin and Belew introduced competitive fitness sharing and
+shared sampling~\cite{hillis1990co,rosin1997new}. Replicator dynamics and
+evolutionarily stable strategies formalise population-level change
+~\cite{hofbauer1998evolutionary,weibull1995evolutionary}. We use
+``co-evolution'' descriptively for reciprocal policy change rather than to
+claim that model weights are evolved.
 
 \paragraph{Security games and multi-agent learning.}
-Stackelberg security games allocate defensive resources against a best
-responding attacker~\cite{tambe2011security}. Multi-agent reinforcement
-learning studies cooperation and competition under partial
-observability~\cite{lowe2017multi,foerster2018counterfactual,kaelbling1998planning}.
-Our setting is closer to the latter (both sides learn; no closed-form best
-response), but grounded in a cyber environment with structured tools and
-logged trajectories rather than an abstract matrix game. Unlike classical
-repeated games with known payoffs, tool outcomes here depend on hidden host
-state and stochastic detection, which motivates reporting DR and CEP alongside
-any success metric.
-
-\paragraph{Evolutionary computation.}
-Co-evolution as a machine-learning method dates to competitive co-evolved
-sorting networks and fitness sharing~\cite{hillis1990co,rosin1997new};
-evolutionary game theory provides replicator dynamics and evolutionarily
-stable strategies~\cite{hofbauer2003evolutionary,weibull1995evolutionary}.
-We do not evolve network weights. We study \emph{behavioural}
-co-evolution: policies change because agents remember outcomes and alter
-subsequent tool choices. The analogy is a security arms race expressed
-through strategy signatures and episode dynamics, not neuroevolution.
+Stackelberg security games model defensive commitment against a best-responding
+attacker~\cite{tambe2011security,sinha2018stackelberg}. POMDPs formalise
+decision making under hidden state~\cite{kaelbling1998planning}, while modern
+multi-agent actor--critic methods address mixed competition, non-stationarity
+and decentralised execution~\cite{lowe2017multi,foerster2018counterfactual}.
+These theories motivate our partially observable repeated game, but do not by
+themselves provide cyber semantics or a protocol for distinguishing static,
+episodic and persistent opponents. Our evaluation therefore reports outcome
+metrics together with process metrics that reveal whether strategies are
+changing, converging or entering an arms race.
 
 \begin{table}[!t]
-\caption{Related directions and the limitation this work addresses.}
+\caption{Positioning against the closest research directions.}
 \label{tab:gap}
 \centering
 \begin{tabularx}{\columnwidth}{@{}lX@{}}
 \toprule
-\textbf{Direction} & \textbf{Typical limitation} \\
+\textbf{Direction} & \textbf{Primary distinction from this work} \\
 \midrule
-Single-agent security~\cite{greshake2023not,debenedetti2024agentdojo}
-  & No strategic interaction \\
-Agent-to-agent attacks~\cite{zhan2024injecagent}
-  & Relatively static adversary \\
-Multi-agent collusion~\cite{abdelnabi2024cooperation}
-  & Limited long-horizon adaptation \\
-Autonomous cyber defence~\cite{standen2021cyborg}
-  & Defender-centric scoring \\
-Security games~\cite{tambe2011security}
-  & Closed-form or scripted best response \\
-Evolutionary AI~\cite{rosin1997new}
-  & Rarely a cyber environment \\
+LLM agent architectures~\cite{shinn2023reflexion,wu2023autogen}
+  & Tools and memory, but no controlled adaptive cyber opponent \\
+Agent security~\cite{debenedetti2024agentdojo,zhan2024injecagent}
+  & Rich attacks, usually without two-sided cross-episode learning \\
+Cyber gyms and MARL~\cite{standen2021cyborg,kunz2022multiagent}
+  & Joint learning, mainly evaluated by reward or task outcome \\
+Cyber co-evolution~\cite{rush2015candles,turner2022analyzing,
+hemberg2025evolutionary}
+  & Evolved controllers/populations rather than declared memory regimes \\
+Security games~\cite{sinha2018stackelberg}
+  & Equilibrium/resource-allocation focus rather than logged agent dynamics \\
 \midrule
-This work & Both sides adapt; cyber env.; measured co-evolution \\
+This work
+  & L0--L2 on both sides; heuristic and LLM policies; longitudinal metrics \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-The gap is therefore not a missing benchmark feature but a missing
-\emph{experimental question}: what changes when adaptation is a first-class
-parameter on both sides of a repeated cyber interaction?
+The resulting gap is narrow but consequential: existing cyber co-evolution
+shows that learning on both sides matters, while agentic-security benchmarks
+show that tools, memory and inter-agent messages create new failure modes. We
+connect these lines by making adaptation a controlled variable for both roles
+and by measuring not only who wins, but how their strategies change across
+repeated cyber interaction.

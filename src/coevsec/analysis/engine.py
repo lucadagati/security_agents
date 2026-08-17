@@ -8,6 +8,7 @@ and tags candidate emergent behaviours (section 25) against the taxonomy.
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 from typing import Any
 
@@ -64,37 +65,65 @@ def _metric_table(ep_df: pd.DataFrame) -> dict[str, Any]:
     return table
 
 
+def _param_distance(a: dict[str, float], b: dict[str, float]) -> float:
+    """Distance on adaptation parameters only (stealth / vigilance)."""
+    keys = ("stealth", "vigilance")
+    return math.sqrt(sum((a.get(k, 0.0) - b.get(k, 0.0)) ** 2 for k in keys))
+
+
 def _strategy_dynamics(episodes: list[dict]) -> dict[str, Any]:
-    """Characterise co-evolution: quantify per-episode strategy change and classify."""
+    """Characterise co-evolution: full-signature and parameter-only dynamics."""
     att = [e.get("attacker_strategy", {}) for e in episodes]
     dfn = [e.get("defender_strategy", {}) for e in episodes]
     deltas = []
+    param_deltas = []
     for t in range(1, len(episodes)):
         d_a = strategy_distance(att[t], att[t - 1])
         d_d = strategy_distance(dfn[t], dfn[t - 1])
         deltas.append((d_a + d_d) / 2.0)
+        p_a = _param_distance(att[t], att[t - 1])
+        p_d = _param_distance(dfn[t], dfn[t - 1])
+        param_deltas.append((p_a + p_d) / 2.0)
     if not deltas:
         return {"classification": "insufficient_data", "mean_delta": 0.0}
 
-    half = max(1, len(deltas) // 2)
-    early = sum(deltas[:half]) / half
-    late = sum(deltas[half:]) / max(1, len(deltas) - half)
-    mean_delta = sum(deltas) / len(deltas)
+    def _classify(ds: list[float]) -> dict[str, Any]:
+        half = max(1, len(ds) // 2)
+        early = sum(ds[:half]) / half
+        late = sum(ds[half:]) / max(1, len(ds) - half)
+        mean_delta = sum(ds) / len(ds)
+        if late < 0.02:
+            classification = "stable_equilibrium"
+        elif late >= 0.02 and late >= 0.6 * early:
+            classification = "non_convergent"
+        else:
+            classification = "converging"
+        return {
+            "classification": classification,
+            "mean_delta": round(mean_delta, 4),
+            "early_delta": round(early, 4),
+            "late_delta": round(late, 4),
+        }
 
-    # Classification (RQ5): converging to a stable equilibrium, or a persistent
-    # arms race (strategies keep changing), or oscillating.
-    if late < 0.02:
-        classification = "stable_equilibrium"
-    elif late >= 0.02 and late >= 0.6 * early:
-        classification = "arms_race"
-    else:
-        classification = "converging"
+    full = _classify(deltas)
+    param = _classify(param_deltas)
+    att_deltas = [strategy_distance(att[t], att[t - 1]) for t in range(1, len(att))]
+    def_deltas = [strategy_distance(dfn[t], dfn[t - 1]) for t in range(1, len(dfn))]
     return {
-        "classification": classification,
-        "mean_delta": round(mean_delta, 4),
-        "early_delta": round(early, 4),
-        "late_delta": round(late, 4),
+        # Primary label for reporting: parameter dynamics (discriminates L0 controls).
+        "classification": param["classification"],
+        "classification_full_signature": full["classification"],
+        "classification_legacy": "arms_race" if param["classification"] == "non_convergent" else param["classification"],
+        "mean_delta": full["mean_delta"],
+        "early_delta": full["early_delta"],
+        "late_delta": full["late_delta"],
+        "param_mean_delta": param["mean_delta"],
+        "param_early_delta": param["early_delta"],
+        "param_late_delta": param["late_delta"],
         "delta_series": [round(d, 4) for d in deltas],
+        "param_delta_series": [round(d, 4) for d in param_deltas],
+        "attacker_delta_series": [round(d, 4) for d in att_deltas],
+        "defender_delta_series": [round(d, 4) for d in def_deltas],
     }
 
 

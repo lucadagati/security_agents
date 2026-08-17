@@ -320,14 +320,19 @@ def _mean_ci(xs: list[float]) -> dict[str, float]:
 
 
 class Campaign:
-    def __init__(self) -> None:
+    def __init__(self, *, phases: set[str] | None = None, force: bool = False) -> None:
         _load_dotenv(ROOT / ".env")
         OUT_DIR.mkdir(parents=True, exist_ok=True)
         self.state_path = OUT_DIR / "suite_state.json"
         self.log_path = OUT_DIR / "suite.log"
         self.tg = TelegramNotifier()
         self.state = self._load_state()
-        self.jobs = _build_jobs()
+        self.force = force
+        all_jobs = _build_jobs()
+        if phases:
+            self.jobs = [j for j in all_jobs if j.phase in phases]
+        else:
+            self.jobs = all_jobs
         self._last_hb = 0.0
 
     def _load_state(self) -> dict:
@@ -363,6 +368,8 @@ class Campaign:
         )
 
     def _already_ok(self, job_id: str) -> bool:
+        if self.force:
+            return False
         r = self.state.get("results", {}).get(job_id)
         return bool(r and r.get("status") == "ok")
 
@@ -401,7 +408,7 @@ class Campaign:
                     "name", "episodes", "attack_success_rate", "detection_rate",
                     "coevolutionary_pressure", "behavioral_novelty", "esr",
                     "coalition_rate", "analysis_classification", "top_emergent",
-                    "run_dir",
+                    "hybrid_gate_stats", "run_dir",
                 )
                 if k in agg or agg.get(k) is not None
             }
@@ -484,18 +491,28 @@ class Campaign:
             # p1_hybrid_b3_static_s520 → b3_static
             parts = jid.split("_")
             label = "_".join(parts[2:4]) if len(parts) >= 5 else "unknown"
-            g = groups.setdefault(label, {"asr": [], "dr": [], "cep": []})
+            g = groups.setdefault(label, {"asr": [], "dr": [], "cep": [], "gate_frac": []})
             g["asr"].append(float(row["attack_success_rate"]))
             g["dr"].append(float(row["detection_rate"]))
             g["cep"].append(float(row.get("coevolutionary_pressure") or 0.0))
+            gate = (row.get("hybrid_gate_stats") or {})
+            if gate.get("attacker_gate_frac") is not None:
+                g["gate_frac"].append(float(gate["attacker_gate_frac"]))
 
         ci_table = {
             label: {
                 "ASR": _mean_ci(vals["asr"]),
                 "DR": _mean_ci(vals["dr"]),
                 "CEP": _mean_ci(vals["cep"]),
+                "gate_frac": _mean_ci(vals["gate_frac"]),
             }
             for label, vals in sorted(groups.items())
+        }
+
+        gate_table = {
+            label: stats["gate_frac"]
+            for label, stats in ci_table.items()
+            if stats.get("gate_frac", {}).get("n", 0)
         }
 
         payload = {
@@ -503,6 +520,7 @@ class Campaign:
             "finished_at": self.state.get("finished_at"),
             "n_results": len(self.state.get("results", {})),
             "phase1_hybrid_ci": ci_table,
+            "phase1_gate_frac": gate_table,
             "metric_rows": rows,
             "raw": self.state.get("results"),
         }
@@ -548,7 +566,19 @@ class Campaign:
 
 
 def main() -> int:
-    return Campaign().run()
+    import argparse
+
+    p = argparse.ArgumentParser(description=__doc__)
+    p.add_argument(
+        "--phase",
+        action="append",
+        default=[],
+        help="Run only these phases (e.g. 1_hybrid_ci). Repeatable.",
+    )
+    p.add_argument("--force", action="store_true", help="Re-run jobs even if previously ok")
+    args = p.parse_args()
+    phases = set(args.phase) if args.phase else None
+    return Campaign(phases=phases, force=args.force).run()
 
 
 if __name__ == "__main__":

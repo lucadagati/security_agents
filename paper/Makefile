@@ -3,13 +3,17 @@ MAIN := main
 LATEXMK := latexmk
 LATEXMK_FLAGS := -pdf -interaction=nonstopmode -halt-on-error
 
-.PHONY: all pdf clean distclean watch
+.PHONY: all pdf figures clean distclean watch
 
 all: pdf
 
+figures:
+	../.venv/bin/python ../scripts/generate_paper_figures.py
+	../.venv/bin/python ../scripts/paper_analysis.py
+
 pdf: $(MAIN).pdf
 
-$(MAIN).pdf: $(MAIN).tex sections/*.tex bib/references.bib figures/*.tex
+$(MAIN).pdf: $(MAIN).tex sections/*.tex bib/references.bib figures/*.tex figures/generated/*
 	$(LATEXMK) $(LATEXMK_FLAGS) $(MAIN).tex
 
 watch:

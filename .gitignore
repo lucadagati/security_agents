@@ -14,6 +14,8 @@ configs/campaign/generated/
 
 # Experiment outputs
 runs/
+!data/paper_runs/
+!data/paper_runs/**
 datasets/*.jsonl
 datasets/**/*.jsonl
 !datasets/.gitkeep

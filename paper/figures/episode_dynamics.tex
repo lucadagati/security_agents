@@ -3,10 +3,10 @@
 \begin{tikzpicture}
 \begin{axis}[
   width=\columnwidth,
-  height=4.2cm,
+  height=4.0cm,
   xmin=1, xmax=40,
   xlabel={Episode $t$},
-  ylabel={Rolling detection rate},
+  ylabel={Rolling DR},
   ymin=0, ymax=1.05,
   xtick={1,10,20,30,40},
   xticklabel style={font=\scriptsize},
@@ -17,10 +17,20 @@
 ]
 \addplot+[thick, mark=none, color=blue!70!black] table[x=ep, y=det, col sep=space] {figures/generated/episode_dynamics.dat};
 \end{axis}
+\begin{axis}[
+  width=\columnwidth,
+  height=4.0cm,
+  xmin=1, xmax=40,
+  axis y line*=right,
+  axis x line=none,
+  ylabel={Attacker stealth},
+  ymin=0, ymax=1.05,
+  yticklabel style={font=\scriptsize},
+  legend style={font=\scriptsize, at={(0.02,0.98)}, anchor=north west, draw=none},
+]
+\addplot+[thick, mark=none, color=red!70!black] table[x=ep, y=stealth, col sep=space] {figures/generated/episode_dynamics.dat};
+\end{axis}
 \end{tikzpicture}
-\caption{Temporal dynamics on a representative persistent/persistent
-heuristic run (seed~100): rolling detection rate falls over $40$ episodes
-while attacker stealth rises from $0.5$ to $0.9$ and defender vigilance
-adjusts accordingly (H2).}
+\caption{Representative P/P run (seed~100): rolling detection rate (left axis) and attacker stealth (right axis). Illustrates programmed pacing, not an unencoded strategy.}
 \label{fig:episode-dynamics}
 \end{figure}

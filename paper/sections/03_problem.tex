@@ -54,17 +54,15 @@ Adaptation is classified into three levels used throughout the paper:
 \textbf{L1 (episodic)} allows within-episode learning but wipes memory at
 the episode boundary; \textbf{L2 (persistent)} retains a compact
 cross-episode reflection in $\mu_i$. Populations may communicate through a
-directed graph $G_t=(V_t,E_t)$~\cite{park2023generative}; coalitions are
+directed graph $G_t=(V_t,E_t)$~\cite{wu2023autogen,li2023camel}; coalitions are
 detected \emph{post hoc} from reciprocal same-role traffic and are never
-objectives in themselves~\cite{abdelnabi2024cooperation}.
+objectives in themselves.
 
-Table~\ref{tab:rq} lists the research questions. RQ0--RQ3 and RQ5 are
-evaluated in Section~\ref{sec:results} on one-versus-one cells; RQ4
-(population scaling) is specified in the experimental matrix but left for
-future work. A behaviour is \emph{emergent} when it is not encoded in
-objectives or declared policy class yet appears consistently across
-episodes and seeds; post-hoc tagging produces candidates for emergence,
-not proof of general intelligence.
+Table~\ref{tab:rq} lists the research questions. RQ0--RQ1, RQ3 and RQ5 are
+evaluated in Section~\ref{sec:results} on one-versus-one cells; RQ2 (emergence
+vs.\ $B_i^{\mathrm{enc}}$) is deferred because ladder pacing behaviours are
+declared in $B_A^{\mathrm{enc}}$; RQ4 (population scaling) is left for future
+work.
 
 \begin{table}[!t]
 \caption{Research questions and their operationalisation.}
@@ -78,17 +76,16 @@ not proof of general intelligence.
 \midrule
 RQ0 & How does security behaviour evolve under repeated interaction? \\
 RQ1 & Effect of adaptation on ASR and DR (ladder factorial) \\
-RQ2 & Emergent behaviours vs.\ encoded set $B_i^{\mathrm{enc}}$ \\
+RQ2 & Emergent behaviours vs.\ $B_i^{\mathrm{enc}}$ (deferred) \\
 RQ3 & Co-evolution measured by CEP and strategy signatures \\
 RQ4 & Population size, topology, communication (E4--E8; future) \\
-RQ5 & Dynamics class: equilibrium, convergence, arms race \\
+RQ5 & Dynamics class: equilibrium, convergence, non-convergent change \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-Each turn proceeds as a simultaneous move with environment-mediated
-feedback: agents act in a fixed order (attacker then defender within the
-turn), but neither observes the other's internal state. Episode termination
+Each turn proceeds in fixed order (attacker then defender) with environment-mediated
+feedback after each action; neither side observes the other's internal state. Episode termination
 occurs when the attacker exfiltrates, the defender contains all footholds,
 or the turn budget expires. Between episodes, only persistent memory and
 adaptive parameters carry forward; the environment is re-sampled from the

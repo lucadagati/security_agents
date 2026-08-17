@@ -5,29 +5,21 @@
   ybar,
   bar width=10pt,
   width=\columnwidth,
-  height=4.4cm,
-  ymin=0, ymax=0.22,
-  ylabel={ASR (mean$\pm$95\% CI)},
-  symbolic x coords={B3 static, B4 episodic, B5 persistent},
+  height=4.2cm,
+  ylabel={Rate},
+  ymin=0, ymax=1.05,
+  symbolic x coords={B3,B4,B5},
   xtick=data,
-  xticklabel style={font=\scriptsize, text width=1.6cm, align=center},
-  yticklabel style={font=\scriptsize},
-  label style={font=\scriptsize},
+  xticklabel style={font=\scriptsize},
+  legend style={font=\scriptsize, at={(0.5,1.02)}, anchor=south, legend columns=2, draw=none},
   grid=major,
   major grid style={dotted,gray!50},
-  error bars/.cd,
-  ymajorgrids,
 ]
-\addplot+[fill=blue!25, draw=blue!60, error bars/.cd, y dir=both, y explicit]
-coordinates {
-(B3 static, 0.000) +- (0, 0.000)
-(B4 episodic, 0.139) +- (0, 0.052)
-(B5 persistent, 0.022) +- (0, 0.014)
-};
+\addplot coordinates {(B3,0.000) (B4,0.211) (B5,0.044)};
+\addplot coordinates {(B3,0.939) (B4,0.856) (B5,0.472)};
+\legend{ASR, Detection rate}
 \end{axis}
 \end{tikzpicture}
-\caption{Attack success rate for hybrid LLM baselines B3--B5 (six seeds,
-$30$ episodes). Only episodic memory (B4) yields a clearly positive mean
-ASR with non-zero confidence interval width.}
+\caption{Hybrid LLM baselines B3--B5 (6-seed means; CI95 in Table~\ref{tab:llm}). B4 has the highest mean ASR; B5 remains low ($0.044{\pm}0.028$).}
 \label{fig:hybrid-asr}
 \end{figure}

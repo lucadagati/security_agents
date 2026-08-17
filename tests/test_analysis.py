@@ -58,8 +58,9 @@ def test_analyze_run_writes_report(tmp_path: Path):
     assert "metric_table" in report
     assert "strategy_dynamics" in report
     assert report["strategy_dynamics"]["classification"] in {
-        "stable_equilibrium", "arms_race", "converging", "insufficient_data",
+        "stable_equilibrium", "non_convergent", "converging", "insufficient_data",
     }
+    assert "param_late_delta" in report["strategy_dynamics"]
     assert "deception" in report["emergence"]["candidate_emergent"]
     assert (run / "analysis" / "report.json").exists()
     assert report["coalition_graph"]["episodes_with_coalitions"] == 2

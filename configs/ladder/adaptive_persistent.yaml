@@ -1,6 +1,6 @@
-# Ladder rung 4: both sides adapt within the episode.
-name: ladder_adaptive_adaptive
-description: Episodic-adaptive attacker vs episodic-adaptive defender.
+# Ladder: episodic attacker vs persistent defender.
+name: ladder_adaptive_persistent
+description: Episodic-adaptive attacker vs persistent defender.
 seed: 100
 episodes: 40
 max_turns: 20
@@ -14,6 +14,6 @@ agents:
     encoded_behaviours: [reconnaissance, privilege_escalation, resource_targeting, stealth_pacing, delayed_attack]
   - id_prefix: defender
     role: defender
-    adaptation: episodic
+    adaptation: persistent
     policy: { kind: heuristic, stealth: 0.4 }
     encoded_behaviours: [adaptive_monitoring, dynamic_isolation]

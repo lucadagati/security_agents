@@ -1,0 +1,20 @@
+\begin{table}[!t]
+\caption{Seed-paired $t$-tests (six seeds). Diff.\ = second minus first cell; positive diff.\ on DR means higher detection in second cell. No multiplicity correction (exploratory).}
+\label{tab:stats-tests}
+\centering
+\setlength{\tabcolsep}{3pt}
+\footnotesize
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+\textbf{ID} & \textbf{Comparison} & \textbf{Diff.} & \textbf{CI$_{95}$} & $t$ & $p$ & $d$ \\
+\midrule
+H1 (CEP-ADJ) & Adaptive vs.\ static attacker & $+0.025$ & $0.051$ & 0.96 & $0.380$ & 0.56 \\
+H2 (CEP-ADJ) & Defender adaptation (static att.) & $-0.030$ & $0.027$ & -2.13 & $0.086$ & -1.23 \\
+CEP (CEP-ADJ) & P/P vs.\ static/static (CEP adj.) & $-0.049$ & $0.060$ & -1.61 & $0.168$ & -0.93 \\
+L2 (CEP-ADJ) & P/P vs.\ A/A (CEP) & $-0.011$ & $0.040$ & -0.54 & $0.612$ & -0.16 \\
+LLM & B4 vs.\ B3 (ASR) & $-0.211$ & $0.040$ & -10.30 & $<0.001$ & -5.95 \\
+LLM & B4 vs.\ B5 (ASR) & $-0.167$ & $0.045$ & -7.32 & $<0.001$ & -3.87 \\
+LLM & B4 vs.\ B3 (DR) & $+0.083$ & $0.040$ & 4.04 & $0.010$ & 2.77 \\
+\bottomrule
+\end{tabular}
+\end{table}

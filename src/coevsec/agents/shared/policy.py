@@ -199,12 +199,14 @@ class LLMPolicy(Policy):
         self.last_tokens = 0
         self.token_remaining = 20000
         self.last_was_repaired = False
+        self.repair_count = 0
         self.stuck = False
 
     def reset_episode(self) -> None:
         self._recent_tools = []
         self.stuck = False
         self.last_was_repaired = False
+        self.repair_count = 0
 
     def _schema_for(self, tools: list[ToolSpec]) -> dict[str, Any]:
         schema = dict(TOOL_CALL_SCHEMA)
@@ -320,6 +322,7 @@ class LLMPolicy(Policy):
         errs = by_name[tc.tool].validate_params(params)
         if errs:
             self.last_was_repaired = True
+            self.repair_count += 1
             # Fall through to first hint if still invalid.
             try:
                 hinted = json.loads(hints[0])
@@ -406,12 +409,36 @@ class HybridPolicy(Policy):
         self._stall = 0
         self._heuristic_steps = 0
         self._llm_steps = 0
+        self._gate_illegal = 0
+        self._gate_stall = 0
+        self._gate_progress = 0
+        self._llm_repairs = 0
         self.last_tokens = 0
 
     def reset_episode(self) -> None:
         self.llm.reset_episode()
         self.heuristic.reset_episode()
         self._stall = 0
+        self._heuristic_steps = 0
+        self._llm_steps = 0
+        self._gate_illegal = 0
+        self._gate_stall = 0
+        self._gate_progress = 0
+        self._llm_repairs = 0
+
+    def gate_stats(self) -> dict[str, float]:
+        total = max(1, self._llm_steps + self._heuristic_steps)
+        return {
+            "llm_steps": float(self._llm_steps),
+            "heuristic_steps": float(self._heuristic_steps),
+            "hybrid_llm_frac": self._llm_steps / total,
+            "hybrid_heur_frac": self._heuristic_steps / total,
+            "gate_interventions": float(self._heuristic_steps),
+            "gate_illegal": float(self._gate_illegal),
+            "gate_stall": float(self._gate_stall),
+            "gate_progress": float(self._gate_progress),
+            "llm_repairs": float(getattr(self.llm, "repair_count", 0)),
+        }
 
     def end_episode(self, summary: dict[str, Any]) -> None:
         self.llm.end_episode(summary)
@@ -425,6 +452,7 @@ class HybridPolicy(Policy):
         action = self.llm.choose(obs, tools, memory)
         self.last_tokens = getattr(self.llm, "last_tokens", 0)
         use_heur = False
+        gate_reason = ""
 
         legal_tools: set[str] = set()
         if self.force_legal_hints:
@@ -440,6 +468,7 @@ class HybridPolicy(Policy):
                     continue
             if legal_tools and action.tool not in legal_tools:
                 use_heur = True
+                gate_reason = "illegal"
 
         if getattr(self.llm, "stuck", False) or getattr(self.llm, "last_was_repaired", False):
             self._stall += 1
@@ -447,6 +476,7 @@ class HybridPolicy(Policy):
             self._stall = max(0, self._stall - 1)
         if self._stall >= self.stall_limit:
             use_heur = True
+            gate_reason = gate_reason or "stall"
 
         has_service_foothold = any(
             h.get("foothold") and h.get("layer") == "service"
@@ -460,18 +490,26 @@ class HybridPolicy(Policy):
             and action.tool in {"recon", "wait", "probe_service", "harvest_credentials"}
         ):
             use_heur = True
+            gate_reason = gate_reason or "progress"
         if (
             self.role == Role.ATTACKER
             and self._llm_steps >= 6
             and not obs.data.get("footholds")
         ):
             use_heur = True
+            gate_reason = gate_reason or "progress"
 
         if use_heur:
             action = self.heuristic.choose(obs, tools, memory)
             action.rationale = f"hybrid/heuristic:{action.rationale}"
             action.strategy = f"hybrid|{action.strategy}"
             self._heuristic_steps += 1
+            if gate_reason == "illegal":
+                self._gate_illegal += 1
+            elif gate_reason == "stall":
+                self._gate_stall += 1
+            elif gate_reason == "progress":
+                self._gate_progress += 1
             self._stall = 0
             self.last_tokens = 0
         else:
